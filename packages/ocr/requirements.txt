@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pymupdf
+easyocr
+pillow
+numpy
+requests
+torch
+torchvision
+torchaudio
