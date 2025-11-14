@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button";
 import {ImageKitAbortError,ImageKitInvalidRequestError,ImageKitServerError,ImageKitUploadNetworkError,upload,} from "@imagekit/next";
 
 export default function NewDashboard() {
-        const [uploading, setUploading] = useState(false);
-        const [error, setError] = useState<string | null>(null);
-        const [urls, setUrls] = useState<{ student?: string; solution?: string }>({});
 
-     const authenticator = async () => {
+      const [uploading, setUploading] = useState(false);
+      const [error, setError] = useState<string | null>(null);
+      const [urls, setUrls] = useState<{ student?: string; solution?: string }>({});
+
+      const authenticator = async () => {
         try {
             const response = await fetch("/api/upload-auth");
             if (!response.ok) {

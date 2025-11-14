@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -30,6 +29,7 @@ export default function DashboardPage() {
 
       const data = await response.json();
       setOcrText(data.text || "No text found in PDF.");
+      
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Something went wrong");
