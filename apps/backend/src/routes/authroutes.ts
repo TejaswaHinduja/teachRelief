@@ -57,14 +57,16 @@ router.post("/signUp",async (req,res)=>{
             email,
             passwordHash
         }
+        
     })
+    
     gentoken(user.id,res);
 
     res.status(201).json({message:"Signed Up!",
         user:{
             name:user.name,
             email:user.email
-        }
+        }  
     });
 }
 catch(error){
