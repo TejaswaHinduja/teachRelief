@@ -56,7 +56,7 @@ export default function SignPage() {
 
       
       <div className="flex items-center w-full py-8 border-b border-border/80">
-        <Link href="/#home" className="flex items-center gap-x-2">
+        <Link href="/home" className="flex items-center gap-x-2">
           {/*<Icons.logo className="w-6 h-6" />*/}
           <h1 className="text-lg font-medium">teachRelief</h1>
         </Link>
