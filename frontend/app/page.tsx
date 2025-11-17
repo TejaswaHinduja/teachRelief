@@ -3,14 +3,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern"
+import { cn } from "@/lib/utils";
+import { Highlighter } from "@/components/ui/highlighter"
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-100 to-blue-200 animate-gradient">
-
+    
+      <div className="relative min-h-screen overflow-hidden">
+      <AnimatedGridPattern
+        numSquares={30}
+        maxOpacity={0.1}
+        duration={3}
+        repeatdelay={1}
+        className={cn(
+          "fixed inset-0 -z-10",
+          "[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]",
+          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
+      )}/>
+      {/*<div className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-b  from-rose-100/40  via-rose-200/30  to-rose-400/20" />*/}
+      {/*<div className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-b  from-sky-200/40  via-blue-200/30  to-blue-300/20" />*/}
+    
       {/* NAVBAR */}
       <header className="w-full absolute top-0 left-0 z-40 bg-transparent">
         <div className="container mx-auto flex items-center justify-between py-6">
@@ -69,13 +84,19 @@ export default function Home() {
 
      
       <div className="flex flex-col items-center justify-center min-h-screen">
+        <Highlighter action="underline" color="#87CEFA">
         <h1 className="text-3xl font-semibold">TeachRelief</h1>
+        </Highlighter>
         <p className="text-gray-600 mt-2">Your AI teaching assistant</p>
       </div>
 
     
       <section id="about" className="min-h-screen flex items-center justify-center px-6">
+        <Highlighter action="underline" color="#FF9800">
+        <Highlighter action="highlight" color="#FF9800">
         <h2 className="text-2xl font-medium">About TeachRelief</h2>
+        </Highlighter>
+        </Highlighter>
       </section>
 
       
@@ -88,8 +109,6 @@ export default function Home() {
         <h2 className="text-2xl font-medium">Pricing</h2>
       </section>
 
-  
     </div>
-    
   );
 }
