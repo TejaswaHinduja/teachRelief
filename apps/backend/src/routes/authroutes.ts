@@ -37,9 +37,9 @@ router.post("/login",async (req,res)=>{
 
 router.post("/signUp",async (req,res)=>{
     try{
-    const {name,email,password}=req.body;
+    const {name,email,password,role}=req.body;
 
-    if(!name||!email||!password){
+    if(!name||!email||!password||!role){
         return res.status(403).json({message:"Fill all the fields"})
     }
 
@@ -55,9 +55,9 @@ router.post("/signUp",async (req,res)=>{
         data:{
             name,
             email,
-            passwordHash
+            passwordHash,
+            role
         }
-        
     })
     
     gentoken(user.id,res);
@@ -74,7 +74,7 @@ catch(error){
 }
 })
 
-/* router.post("/createroom",protect,async (req:AuthRequest,res)=>{
+router.post("/createroom",protect,async (req:AuthRequest,res)=>{
     const code=req.user!.id+Date.now().toString().slice(-4);
 
     if(!code){
@@ -83,8 +83,7 @@ catch(error){
     try{
         const room=await prisma.room.create({
             data:{
-                code,
-                adminId:req.user!.id
+                code
             }
         })
         res.status(201).json({message:"room created",roomId:room.id})
@@ -92,7 +91,7 @@ catch(error){
     catch(error){
         console.log(error)
     }
-})*/
+})
 
 router.get("/chats/:roomId",async(req , res) =>{
     try{

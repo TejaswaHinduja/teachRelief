@@ -29,10 +29,8 @@ enum UserRole{
 }
 
 model Room{
-    id String @id @default(cuid())
     code String @unique
     createAT DateTime @default(now())
-    chats Chat[]
 }
 
 model Chat{
@@ -40,6 +38,6 @@ model Chat{
     roomId String 
     message String
     userId String 
-    room Room @relation(fields: [roomId],references: [id])
+    
 }
 
