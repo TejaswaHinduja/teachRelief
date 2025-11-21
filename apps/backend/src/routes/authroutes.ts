@@ -86,7 +86,7 @@ router.post("/createroom",protect,async (req:AuthRequest,res)=>{
                 code
             }
         })
-        res.status(201).json({message:"room created",roomId:room.id})
+        res.status(201).json({message:"room created"})
     }
     catch(error){
         console.log(error)

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {ImageKitAbortError,ImageKitInvalidRequestError,ImageKitServerError,ImageKitUploadNetworkError,upload,} from "@imagekit/next";
+import { headers } from "next/headers";
 
 export default function DashboardPage() {
   const [ocrText, setOcrText] = useState("");
@@ -13,7 +14,7 @@ export default function DashboardPage() {
   const [pdfUrl, setPdfUrl] = useState("");
 
   // Authenticator function for ImageKit upload
-  const authenticator = async () => {
+const authenticator = async () => {
     try {
       const response = await fetch("/api/upload-auth");
       if (!response.ok) {
@@ -31,8 +32,7 @@ export default function DashboardPage() {
     }
   };
 
-  
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -42,11 +42,11 @@ export default function DashboardPage() {
 
     try {
       
-      const authParams = await authenticator();
-      const { signature, expire, token, publicKey } = authParams;
+    const authParams = await authenticator();
+    const { signature, expire, token, publicKey } = authParams;
 
       
-      const uploadResponse = await upload({
+    const uploadResponse = await upload({
         expire,
         token,
         signature,
@@ -84,8 +84,7 @@ export default function DashboardPage() {
     }
   };
 
-  
-  const handleOCR = async () => {
+const handleOCR = async () => {
     if (!pdfUrl) {
       setError("Please upload a PDF first");
       return;
@@ -117,9 +116,25 @@ export default function DashboardPage() {
     }
   };
 
+const createRoom=async()=>{
+  try{
+    const response=await fetch("localhost:1000/api/createroom",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(userId)
+    })
+     
+  
+}
+ catch(e){
+  console.log(e)
+ }
+
+
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-6">
       <div className="space-y-2 text-center">
+      <Button onClick={createRoom}>Create Room</Button>
         <h1 className="text-3xl font-bold">PDF OCR Extractor</h1>
         <p className="text-gray-600">
           Upload a PDF to extract text using OCR
