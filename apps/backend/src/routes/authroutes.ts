@@ -27,7 +27,8 @@ router.post("/login",async (req,res)=>{
     
     res.status(200).json({message:"Logged In",
         name:checkdb.name,
-        email:checkdb.email
+        email:checkdb.email,
+        role:checkdb.role
     })
     }
     catch(error){
@@ -65,7 +66,8 @@ router.post("/signUp",async (req,res)=>{
     res.status(201).json({message:"Signed Up!",
         user:{
             name:user.name,
-            email:user.email
+            email:user.email,
+            role
         }  
     });
 }
@@ -86,7 +88,10 @@ router.post("/createroom",protect,async (req:AuthRequest,res)=>{
                 code
             }
         })
-        res.status(201).json({message:"room created"})
+        res.status(201).json({
+            message:"room created"
+
+        })
     }
     catch(error){
         console.log(error)

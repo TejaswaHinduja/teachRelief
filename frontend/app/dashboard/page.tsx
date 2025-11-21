@@ -1,12 +1,70 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {ImageKitAbortError,ImageKitInvalidRequestError,ImageKitServerError,ImageKitUploadNetworkError,upload,} from "@imagekit/next";
-import { headers } from "next/headers";
+import { useRouter } from "next/navigation";
+import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
 
 export default function DashboardPage() {
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    const name = localStorage.getItem("userName");
+
+    if (!role) {
+      router.push("/auth/login");
+      return;
+    }
+
+    setUserRole(role);
+    setUserName(name || "User");
+  }, [router]);
+
+  
+  if (userRole === null) {
+    return <div className="p-8 text-center">Loading...</div>;
+  }
+
+  return (
+    <div className="p-8 max-w-3xl mx-auto space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">
+          Welcome, {userName}!
+        </h1>
+        <Button
+          variant="outline"
+          onClick={() => {
+            localStorage.removeItem("userRole");
+            localStorage.removeItem("userName");
+            router.push("/auth/login");
+          }}
+        >
+          Logout
+        </Button>
+      </div>
+
+      <div className="p-4 bg-blue-50 rounded-md">
+        <p className="text-sm text-blue-800">
+          You are logged in as: <strong>{userRole}</strong>
+        </p>
+      </div>
+
+      {/* ✅ Conditional rendering based on role */}
+      {userRole === "TEACHER" ? (
+        <TeacherDashboard />
+      ) : (
+        <StudentDashboard />
+      )}
+    </div>
+  );
+}
+
+// ✅ Teacher-specific UI
+function TeacherDashboard() {
   const [ocrText, setOcrText] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -14,7 +72,7 @@ export default function DashboardPage() {
   const [pdfUrl, setPdfUrl] = useState("");
 
   // Authenticator function for ImageKit upload
-const authenticator = async () => {
+  const authenticator = async () => {
     try {
       const response = await fetch("/api/upload-auth");
       if (!response.ok) {
@@ -32,7 +90,7 @@ const authenticator = async () => {
     }
   };
 
-const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -41,12 +99,10 @@ const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setPdfUrl("");
 
     try {
-      
-    const authParams = await authenticator();
-    const { signature, expire, token, publicKey } = authParams;
+      const authParams = await authenticator();
+      const { signature, expire, token, publicKey } = authParams;
 
-      
-    const uploadResponse = await upload({
+      const uploadResponse = await upload({
         expire,
         token,
         signature,
@@ -66,7 +122,6 @@ const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         throw new Error("Upload succeeded but no URL was returned");
       }
     } catch (error) {
-      
       if (error instanceof ImageKitAbortError) {
         setError(`Upload aborted: ${error.reason}`);
       } else if (error instanceof ImageKitInvalidRequestError) {
@@ -84,7 +139,7 @@ const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-const handleOCR = async () => {
+  const handleOCR = async () => {
     if (!pdfUrl) {
       setError("Please upload a PDF first");
       return;
@@ -116,77 +171,124 @@ const handleOCR = async () => {
     }
   };
 
-const createRoom=async()=>{
-  try{
-    const response=await fetch("localhost:1000/api/createroom",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(userId)
-    })
-     
-  
-}
- catch(e){
-  console.log(e)
- }
+  const createRoom = async () => {
+    try {
+      const response = await fetch("http://localhost:1000/api/createroom", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
 
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto space-y-6">
-      <div className="space-y-2 text-center">
-      <Button onClick={createRoom}>Create Room</Button>
-        <h1 className="text-3xl font-bold">PDF OCR Extractor</h1>
-        <p className="text-gray-600">
-          Upload a PDF to extract text using OCR
-        </p>
-      </div>
+    <div className="space-y-6">
+      <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
 
-      {/* PDF Upload Section */}
-      <div className="space-y-2">
-        <Label htmlFor="pdf-file">Upload Solution PDF</Label>
-        <Input
-          id="pdf-file"
-          type="file"
-          accept=".pdf"
-          onChange={handleUpload}
-          disabled={uploading || loading}
-        />
+      <div className="space-y-4">
+        <Button onClick={createRoom} className="w-full">
+          Create Room
+        </Button>
+
+        {/* PDF Upload Section */}
+        <div className="space-y-2">
+          <Label htmlFor="pdf-file">Upload Solution PDF</Label>
+          <Input
+            id="pdf-file"
+            type="file"
+            accept=".pdf"
+            onChange={handleUpload}
+            disabled={uploading || loading}
+          />
+          {pdfUrl && (
+            <p className="text-sm text-green-600">
+              ✅ PDF uploaded successfully
+            </p>
+          )}
+          {uploading && (
+            <p className="text-sm text-blue-600">📤 Uploading PDF...</p>
+          )}
+        </div>
+
+        {/* OCR Button */}
+        <div className="flex justify-center">
+          <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
+            {loading ? "Extracting OCR..." : "Run OCR on PDF"}
+          </Button>
+        </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
+        )}
+
+        {/* OCR Result Display */}
+        {ocrText && (
+          <div className="p-4 bg-gray-50 border rounded-md whitespace-pre-wrap">
+            <h2 className="text-lg font-semibold mb-2">Extracted Text:</h2>
+            <p className="text-sm text-gray-800">{ocrText}</p>
+          </div>
+        )}
+
+        {/* PDF URL Display (for debugging) */}
         {pdfUrl && (
-          <p className="text-sm text-green-600">
-            ✅ PDF uploaded successfully
-          </p>
-        )}
-        {uploading && (
-          <p className="text-sm text-blue-600">📤 Uploading PDF...</p>
+          <div className="p-2 bg-gray-50 rounded text-xs">
+            <strong>PDF URL:</strong> {pdfUrl}
+          </div>
         )}
       </div>
+    </div>
+  );
+}
 
-      {/* OCR Button */}
-      <div className="flex justify-center">
-        <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
-          {loading ? "Extracting OCR..." : "Run OCR on PDF"}
+// ✅ Student-specific UI
+function StudentDashboard() {
+  const [roomCode, setRoomCode] = useState("");
+
+  const joinRoom = async () => {
+    if (!roomCode) {
+      alert("Please enter a room code");
+      return;
+    }
+
+    // TODO: Implement join room API call
+    alert(`Joining room: ${roomCode}`);
+  };
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-semibold">Student Dashboard</h2>
+
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="room-code">Room Code</Label>
+          <Input
+            id="room-code"
+            placeholder="Enter room code"
+            value={roomCode}
+            onChange={(e) => setRoomCode(e.target.value)}
+          />
+        </div>
+
+        <Button onClick={joinRoom} className="w-full">
+          Join Room
+        </Button>
+
+        <Button variant="outline" className="w-full">
+          View My Submissions
+        </Button>
+
+        <Button variant="outline" className="w-full">
+          View Grades
         </Button>
       </div>
-
-      {/* Error Display */}
-      {error && (
-        <div className="p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
-      )}
-
-      {/* OCR Result Display */}
-      {ocrText && (
-        <div className="p-4 bg-gray-50 border rounded-md whitespace-pre-wrap">
-          <h2 className="text-lg font-semibold mb-2">Extracted Text:</h2>
-          <p className="text-sm text-gray-800">{ocrText}</p>
-        </div>
-      )}
-
-      {/* PDF URL Display (for debugging) */}
-      {pdfUrl && (
-        <div className="p-2 bg-gray-50 rounded text-xs">
-          <strong>PDF URL:</strong> {pdfUrl}
-        </div>
-      )}
     </div>
   );
 }

@@ -4,14 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-//import { Icons } from "@/components";
 import { useParams, notFound, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
 import Link from "next/link";
 
 export default function SignPage() {
   const { type } = useParams();
+  const router = useRouter(); 
 
   if (typeof type !== "string") return null;
 
@@ -47,12 +46,18 @@ export default function SignPage() {
       alert(data.message);
       return;
     }
+    const userRole = signup ? data.user?.role : data.role;
+    const userName = signup ? data.user?.name : data.name;
+    if (userRole) {
+      localStorage.setItem("userRole", userRole);
+      localStorage.setItem("userName", userName || "");
+    }
     alert(data.message);
+    router.push("/dashboard");
   }
 
   return (
     <div className="flex flex-col items-start max-w-sm mx-auto h-dvh overflow-hidden pt-4 md:pt-20">
-
 
       <div className="flex items-center w-full py-8 border-b border-border/80">
         <Link href="/" className="flex items-center gap-x-2">
