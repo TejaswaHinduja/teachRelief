@@ -173,8 +173,8 @@ function TeacherDashboard() {
       });
       const data = await response.json();
       console.log(data);
-      if (data.roomCode) {
-        setRoomCode(data.roomCode);
+      if (data.code) {
+        setRoomCode(data.code);
         alert(data.message || "Room created successfully!");
       }
     } catch (e) {
@@ -190,9 +190,7 @@ function TeacherDashboard() {
       <div className="space-y-4">
         <Button onClick={createRoom} className="w-full">
           Create Room
-    
         </Button>
-
         {/* Room Code Display */}
         {roomCode && (
           <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-md">
