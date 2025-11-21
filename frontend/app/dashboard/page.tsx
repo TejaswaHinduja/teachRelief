@@ -24,7 +24,7 @@ export default function DashboardPage() {
     setUserName(name || "User");
   }, [router]);
 
-  
+
   if (userRole === null) {
     return <div className="p-8 text-center">Loading...</div>;
   }
@@ -47,13 +47,6 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <div className="p-4 bg-blue-50 rounded-md">
-        <p className="text-sm text-blue-800">
-          You are logged in as: <strong>{userRole}</strong>
-        </p>
-      </div>
-
-      {/* ✅ Conditional rendering based on role */}
       {userRole === "TEACHER" ? (
         <TeacherDashboard />
       ) : (
@@ -63,13 +56,13 @@ export default function DashboardPage() {
   );
 }
 
-// ✅ Teacher-specific UI
 function TeacherDashboard() {
   const [ocrText, setOcrText] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
+  const [roomCode, setRoomCode] = useState<string | null>(null);
 
   // Authenticator function for ImageKit upload
   const authenticator = async () => {
@@ -178,13 +171,15 @@ function TeacherDashboard() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        alert(data.message);
+      const data = await response.json();
+      console.log(data);
+      if (data.roomCode) {
+        setRoomCode(data.roomCode);
+        alert(data.message || "Room created successfully!");
       }
     } catch (e) {
       console.log(e);
+      alert("Failed to create room. Please try again.");
     }
   };
 
@@ -195,7 +190,32 @@ function TeacherDashboard() {
       <div className="space-y-4">
         <Button onClick={createRoom} className="w-full">
           Create Room
+    
         </Button>
+
+        {/* Room Code Display */}
+        {roomCode && (
+          <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-md">
+            <h3 className="text-lg font-semibold mb-2">Room Code</h3>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 p-3 bg-white border border-blue-300 rounded text-xl font-mono font-bold text-blue-700">
+                {roomCode}
+              </code>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  navigator.clipboard.writeText(roomCode);
+                  alert("Room code copied to clipboard!");
+                }}
+              >
+                Copy
+              </Button>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Share this code with your students so they can join the room.
+            </p>
+          </div>
+        )}
 
         {/* PDF Upload Section */}
         <div className="space-y-2">
@@ -248,7 +268,7 @@ function TeacherDashboard() {
   );
 }
 
-// ✅ Student-specific UI
+
 function StudentDashboard() {
   const [roomCode, setRoomCode] = useState("");
 

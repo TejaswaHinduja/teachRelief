@@ -79,9 +79,7 @@ catch(error){
 router.post("/createroom",protect,async (req:AuthRequest,res)=>{
     const code=req.user!.id+Date.now().toString().slice(-4);
 
-    if(!code){
-        return res.json({message:"room code invalid"})
-    }
+    
     try{
         const room=await prisma.room.create({
             data:{
@@ -89,7 +87,8 @@ router.post("/createroom",protect,async (req:AuthRequest,res)=>{
             }
         })
         res.status(201).json({
-            message:"room created"
+            message:"room created",
+            code
 
         })
     }
