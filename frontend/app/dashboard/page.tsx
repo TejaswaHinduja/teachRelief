@@ -1,10 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
+import { CopyButton } from "@/components/ui/copy-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
+import { Copy } from "lucide-react";
 
 export default function DashboardPage() {
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -199,15 +201,8 @@ function TeacherDashboard() {
               <code className="flex-1 p-3 bg-white border border-blue-300 rounded text-xl font-mono font-bold text-blue-700">
                 {roomCode}
               </code>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  navigator.clipboard.writeText(roomCode);
-                  alert("Room code copied to clipboard!");
-                }}
-              >
-                Copy
-              </Button>
+              <CopyButton content={roomCode} onCopy={()=>console.log("copied")}/>
+             
             </div>
             <p className="text-sm text-gray-600 mt-2">
               Share this code with your students so they can join the room.
