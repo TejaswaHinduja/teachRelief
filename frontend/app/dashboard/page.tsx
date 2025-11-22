@@ -212,7 +212,9 @@ function TeacherDashboard() {
 
         {/* PDF Upload Section */}
         <div className="space-y-2">
-          <Label htmlFor="pdf-file">Upload Solution PDF</Label>
+        <Label htmlFor="pdf-file">Upload Assignment </Label>
+        <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUpload}></Input>
+          <Label htmlFor="pdf-file">Upload Solution </Label>
           <Input
             id="pdf-file"
             type="file"
@@ -222,11 +224,11 @@ function TeacherDashboard() {
           />
           {pdfUrl && (
             <p className="text-sm text-green-600">
-              ✅ PDF uploaded successfully
+              PDF uploaded successfully ✅ 
             </p>
           )}
           {uploading && (
-            <p className="text-sm text-blue-600">📤 Uploading PDF...</p>
+            <p className="text-sm text-blue-600">Uploading PDF...</p>
           )}
         </div>
 
