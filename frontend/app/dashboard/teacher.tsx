@@ -145,8 +145,9 @@ const createRoom = async () => {
         </Button>
         {/* Room Code Display */}
         
-        {roomCode && (<div>
-            <Card isPressable onPress={() => console.log("item pressed")}   >
+        {roomCode && (<div className="flex">
+            <Card isPressable onPress={() => console.log("item pressed")} className="border-2 border-gray-200 hover:border-gray-300 transition-colors"
+   >
               <CardHeader className="flex gap-3">
                 <div className="flex flex-col">
                     <p className="text-md">Room Code</p>
@@ -155,8 +156,8 @@ const createRoom = async () => {
                 <CardBody>
                     <p>{roomCode}</p>
                 </CardBody>
-              <CopyButton content={roomCode} onCopy={()=>console.log("copied")}/>
             </Card>
+            <CopyButton content={roomCode} onCopy={()=>console.log("copied")}/>
             </div>
            
         )}
