@@ -156,10 +156,14 @@ const createRoom = async () => {
                     </div>
                 </CardHeader>
                 <CardBody>
+                  <div className="flex space-x-2">
                     <p>{roomCode}</p>
+                    <CopyButton content={roomCode} onCopy={()=>console.log("copied")}/>
+                    </div>
                 </CardBody>
+
             </Card>
-            <CopyButton content={roomCode} onCopy={()=>console.log("copied")}/>
+
             </div>
            
         )}
