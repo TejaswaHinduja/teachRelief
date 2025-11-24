@@ -1,16 +1,14 @@
-import { useState, useEffect } from "react";
-import { CopyButton } from "@/components/ui/copy-button";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+"use client"
+
+import { Button } from "@/components/ui/button"
+import {Label} from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import {useRouter} from "next/navigation";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
-import {Card, CardHeader, CardBody, CardFooter} from "@heroui/card";
-import { useRouter } from "next/navigation";
 
-
-
-export default function TeacherDashboard() {
-  const [ocrText, setOcrText] = useState("");
+export default function room(){
+const [ocrText, setOcrText] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -118,81 +116,28 @@ const handleOCR = async () => {
     }
   };
 
-const createRoom = async () => {
-    try {
-      const response = await fetch("http://localhost:1000/api/createroom", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      console.log(data);
-      if (data.code) {
-        setRoomCode(data.code);
-        alert(data.message || "Room created successfully!");
-      }
-    } catch (e) {
-      console.log(e);
-      alert("Failed to create room. Please try again.");
-    }
-  };
 
-  return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
-
-      <div className="space-y-4">
-        <Button onClick={createRoom} className="w-full">
-          Create Room
-        </Button>
-        {/* Room Code Display */}
-        
-        {roomCode && (<div className="flex">
-            <Card isPressable onPress={() => router.push(`/room/{roomCode}`)} className="border-2 border-gray-200 hover:border-gray-300 transition-colors"
-   >
-              <CardHeader className="flex gap-3">
-                <div className="flex flex-col">
-                    <p className="text-md">Room Code</p>
-                    </div>
-                </CardHeader>
-                <CardBody>
-                    <p>{roomCode}</p>
-                </CardBody>
-            </Card>
-            <CopyButton content={roomCode} onCopy={()=>console.log("copied")}/>
-            </div>
-           
-        )}
-
-        
-
-        {/* OCR Button */}
-        <div className="flex justify-center">
-          <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
-            {loading ? "Extracting OCR..." : "Run OCR on PDF"}
-          </Button>
+    return <div>
+        {/* PDF Upload Section */}
+        <div className="space-y-2">
+        <Label htmlFor="pdf-file">Upload Assignment </Label>
+        <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUpload}></Input>
+          <Label htmlFor="pdf-file">Upload Solution </Label>
+          <Input
+            id="pdf-file"
+            type="file"
+            accept=".pdf"
+            onChange={handleUpload}
+            disabled={uploading || loading}
+          />
+          {pdfUrl && (
+            <p className="text-sm text-green-600">
+              PDF uploaded successfully ✅ 
+            </p>
+          )}
+          {uploading && (
+            <p className="text-sm text-blue-600">Uploading PDF...</p>
+          )}
         </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className="p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
-        )}
-
-        {/* OCR Result Display */}
-        {ocrText && (
-          <div className="p-4 bg-gray-50 border rounded-md whitespace-pre-wrap">
-            <h2 className="text-lg font-semibold mb-2">Extracted Text:</h2>
-            <p className="text-sm text-gray-800">{ocrText}</p>
-          </div>
-        )}
-
-        {/* PDF URL Display (for debugging) */}
-        {pdfUrl && (
-          <div className="p-2 bg-gray-50 rounded text-xs">
-            <strong>PDF URL:</strong> {pdfUrl}
-          </div>
-        )}
-      </div>
     </div>
-  );
 }
