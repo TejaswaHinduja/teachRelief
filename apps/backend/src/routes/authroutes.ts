@@ -130,22 +130,27 @@ router.post("/joinroom",protect,async(req,res)=>{
         if(!checkRoom){
             return res.status(403).json({message:"No such room"})
         }
-        const checkMembership=await prisma.roomMembership.findMany({
-            where:{studentId:userId}
+        const checkMembership=await prisma.roomMembership.findFirst({
+            where:{
+                studentId:userId,
+                roomId:checkRoom.id
+            }
         })
         if(checkMembership){
             return res.json({message:"Already joined"})
         }
-        if(!checkMembership){
+        else{
             await prisma.roomMembership.create({
                 data:{
-                    roomId:roomCode,
+                    roomId:checkRoom.id,
                     studentId:userId
                 }
             })
-            return res.json({message:"Room joined"})
+            return res.json({
+                message:"Room joined",
+                roomId:checkRoom.id
+            })
         }
-
     }
     catch(e){
         console.log(e)
