@@ -11,15 +11,22 @@ import { useRouter } from "next/navigation";
 export default function StudentDashboard() {
   const router=useRouter();
   const [roomCode, setRoomCode] = useState("");
-
   const joinRoom = async () => {
-    
-    
     if (!roomCode) {
       alert("Please enter a room code");
       return;
     }
+    const response=await fetch("http://localhost:1000/api/joinroom",{
+      method:"POST",
+      credentials:"include",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({roomCode})
+    })
 
+    const data=await response.json()
+    if(data.roomId){
+      router.push(`/room/${data.roomId}`)
+    }
     // TODO: Implement join room API call
     alert(`Joining room: ${roomCode}`);
   };
