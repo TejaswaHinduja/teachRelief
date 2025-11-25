@@ -163,13 +163,8 @@ const createRoom = async () => {
                 </CardBody>
 
             </Card>
-
             </div>
-           
         )}
-
-        
-
         {/* OCR Button */}
         <div className="flex justify-center">
           <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>

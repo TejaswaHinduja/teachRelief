@@ -22,6 +22,7 @@ model User{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   role UserRole @default(STUDENT)
+  roomMemberships RoomMembership[]
 }
 enum UserRole{
   TEACHER
@@ -29,8 +30,10 @@ enum UserRole{
 }
 
 model Room{
+    id String @unique @default(cuid())
     code String @unique
     createAT DateTime @default(now())
+    members RoomMembership[]
 }
 
 model Chat{
@@ -38,6 +41,12 @@ model Chat{
     roomId String 
     message String
     userId String 
-    
 }
-
+model RoomMembership{
+  id        String   @id @default(cuid())
+  roomId    String
+  studentId String
+  joinedAt  DateTime @default(now())
+  room      Room     @relation(fields: [roomId], references: [id])
+  student   User     @relation(fields: [studentId], references: [id])
+}

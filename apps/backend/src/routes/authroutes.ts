@@ -115,5 +115,41 @@ router.get("/chats/:roomId",async(req , res) =>{
     }
 })
 
+router.post("/joinroom",protect,async(req,res)=>{
+    try{
+        const {roomCode}=req.body;
+        //@ts-ignore
+        const userId=req.user.id;
+        //@ts-ignore
+        if(req.user.role!=="STUDENT"){
+            return res.status(403).json({message:"Not authorized"})
+        }
+        const checkRoom=await prisma.room.findUnique({
+            where:{code:roomCode}
+        })
+        if(!checkRoom){
+            return res.status(403).json({message:"No such room"})
+        }
+        const checkMembership=await prisma.roomMembership.findMany({
+            where:{studentId:userId}
+        })
+        if(checkMembership){
+            return res.json({message:"Already joined"})
+        }
+        if(!checkMembership){
+            await prisma.roomMembership.create({
+                data:{
+                    roomId:roomCode,
+                    studentId:userId
+                }
+            })
+            return res.json({message:"Room joined"})
+        }
+
+    }
+    catch(e){
+        console.log(e)
+    }
+})
 
 export default router;

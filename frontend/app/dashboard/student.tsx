@@ -3,11 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { useRouter } from "next/navigation";
+
+
+
 
 export default function StudentDashboard() {
+  const router=useRouter();
   const [roomCode, setRoomCode] = useState("");
 
   const joinRoom = async () => {
+    
+    
     if (!roomCode) {
       alert("Please enter a room code");
       return;
