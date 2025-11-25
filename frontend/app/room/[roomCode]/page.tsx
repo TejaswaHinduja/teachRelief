@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react";
 import {useRouter} from "next/navigation";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
+import { Card,CardBody } from "@heroui/card";
 
 export default function room(){
 const [ocrText, setOcrText] = useState("");
@@ -118,6 +119,10 @@ const handleOCR = async () => {
 
 
     return <div>
+      <Card>
+        <CardBody><p>Maths </p>
+          </CardBody>
+          </Card>
         {/* PDF Upload Section */}
         <div className="space-y-2">
         <Label htmlFor="pdf-file">Upload Assignment </Label>
