@@ -1,15 +1,17 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request,Response,NextFunction } from "express";
+import { prisma } from "@repo/db";
+import { User } from "../../../../packages/db/generated/prisma";
 
 const secret=process.env.JWT_SECRET ||"!23";
 
 export interface AuthRequest extends Request {
-  user?: { id: string }; 
+  user?: User
 }
 
 
 
-export function protect(req:AuthRequest,res:Response,next:NextFunction){
+export async function protect(req:AuthRequest,res:Response,next:NextFunction){
     const token=req.cookies.jwt;
     if(!token){
         return res.status(400).json({message:"Inavlid creds"})
@@ -19,8 +21,13 @@ export function protect(req:AuthRequest,res:Response,next:NextFunction){
     if(!decoded || !decoded.id){
         return res.status(400).json({message:"not authorized"})
     }
-
-    req.user={id:decoded.id} 
+    const user=await prisma.user.findUnique({
+        where: {id:decoded.id}
+    })
+    if(!user){
+        return;
+    }
+    req.user=user;
     next()}
     catch(error){
         return res.status(403).json({message:"token invalid"})

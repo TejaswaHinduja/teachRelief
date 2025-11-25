@@ -5,9 +5,6 @@ import { Label } from "@/components/ui/label";
 
 import { useRouter } from "next/navigation";
 
-
-
-
 export default function StudentDashboard() {
   const router=useRouter();
   const [roomCode, setRoomCode] = useState("");
