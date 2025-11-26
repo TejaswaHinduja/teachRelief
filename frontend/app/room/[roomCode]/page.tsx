@@ -119,10 +119,13 @@ const handleOCR = async () => {
 
 
     return <div>
+
       <Card>
-        <CardBody><p>Maths </p>
-          </CardBody>
-          </Card>
+        <CardBody>
+          <p>Maths </p>
+        </CardBody>
+      </Card>
+      
         {/* PDF Upload Section */}
         <div className="space-y-2">
         <Label htmlFor="pdf-file">Upload Assignment </Label>

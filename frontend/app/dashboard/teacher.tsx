@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
-import {Card, CardHeader, CardBody, CardFooter} from "@heroui/card";
+import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
 import { useRouter } from "next/navigation";
 
 
@@ -19,7 +19,7 @@ export default function TeacherDashboard() {
   const router=useRouter()
 
   // Authenticator function for ImageKit upload
-const authenticator = async () => {
+  const authenticator = async () => {
     try {
       const response = await fetch("/api/upload-auth");
       if (!response.ok) {
@@ -37,7 +37,7 @@ const authenticator = async () => {
     }
   };
 
-const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -86,7 +86,7 @@ const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-const handleOCR = async () => {
+  const handleOCR = async () => {
     if (!pdfUrl) {
       setError("Please upload a PDF first");
       return;
@@ -118,7 +118,8 @@ const handleOCR = async () => {
     }
   };
 
-const createRoom = async () => {
+  const createRoom = async () => {
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:1000/api/createroom", {
         method: "POST",
@@ -134,6 +135,8 @@ const createRoom = async () => {
     } catch (e) {
       console.log(e);
       alert("Failed to create room. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,29 +145,27 @@ const createRoom = async () => {
       <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
 
       <div className="space-y-4">
-        <Button onClick={createRoom} className="w-full">
-          Create Room
+        <Button onClick={createRoom} className="w-full" disabled={loading}>
+          {loading ? "Creating Room..." : "Create Room"}
         </Button>
         {/* Room Code Display */}
-        
         {roomCode && (<div className="flex">
-            <Card isPressable onPress={() => router.push(`/room/{roomCode}`)} className="border-2 border-gray-200 hover:border-gray-300 transition-colors"
-   >
-              <CardHeader className="flex gap-3">
-                <div className="flex flex-col">
-                    <p className="text-md">Room Code</p>
-                    </div>
-                </CardHeader>
-                <CardBody>
-                  <div className="flex space-x-2">
-                    <p>{roomCode}</p>
-                    <CopyButton content={roomCode} onCopy={()=>console.log("copied")}/>
-                    </div>
-                </CardBody>
-
-            </Card>
-            </div>
+          <Card isPressable onPress={() => router.push(`/room/{roomCode}`)} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
+            <CardHeader className="flex gap-3">
+              <div className="flex flex-col">
+                <p className="text-md">Room Code</p>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <div className="flex space-x-2">
+                <p>{roomCode}</p>
+                <CopyButton content={roomCode} onCopy={() => console.log("copied")} />
+              </div>
+            </CardBody>
+          </Card>
+        </div>
         )}
+
         {/* OCR Button */}
         <div className="flex justify-center">
           <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
