@@ -8,7 +8,12 @@ import { useRouter } from "next/navigation";
 export default function StudentDashboard() {
   const router=useRouter();
   const [roomCode, setRoomCode] = useState("");
+  const [loading,setLoading]=useState(false);
+
+
+
   const joinRoom = async () => {
+    setLoading(true)
     if (!roomCode) {
       alert("Please enter a room code");
       return;
@@ -24,7 +29,6 @@ export default function StudentDashboard() {
     if(data.roomId){
       router.push(`/room/${data.roomId}`)
     }
-    // TODO: Implement join room API call
     alert(`Joining room: ${roomCode}`);
   };
 
@@ -43,10 +47,9 @@ export default function StudentDashboard() {
           />
         </div>
 
-        <Button onClick={joinRoom} className="w-full">
-          Join Room
+        <Button onClick={joinRoom} className="w-full" disabled={loading}>
+          {loading?"Joining Room ...":"Join Room"}
         </Button>
-
         <Button variant="outline" className="w-full">
           View My Submissions
         </Button>
