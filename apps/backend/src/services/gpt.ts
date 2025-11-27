@@ -6,11 +6,10 @@ console.log(apikey)
 //@ts-ignore
 const ai = new GoogleGenAI({apikey});
 
-async function main() {
+export async function compareAi(data:string) {
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: "Explain how AI works in a few words",
+    contents:"can you sort this ",
   });
   console.log(response.text);
 }
-main();

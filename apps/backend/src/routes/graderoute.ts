@@ -15,7 +15,7 @@ router.post("/ocr", async (req, res) => {
     });
 
     const data = await ocrResponse.json();
-    compareAi(data)
+   // compareAi(data)
     res.json(data);
   } catch (err) {
     console.error(err);

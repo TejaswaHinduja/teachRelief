@@ -90,7 +90,6 @@ const handleOCR = async () => {
       setError("Please upload a PDF first");
       return;
     }
-
     setLoading(true);
     setError("");
     setOcrText("");
@@ -138,6 +137,11 @@ const handleOCR = async () => {
             onChange={handleUpload}
             disabled={uploading || loading}
           />
+          <div className="flex justify-center">
+          <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
+            {loading ? "Extracting OCR..." : "Run OCR on PDF"}
+          </Button>
+        </div>
           {pdfUrl && (
             <p className="text-sm text-green-600">
               PDF uploaded successfully ✅ 
