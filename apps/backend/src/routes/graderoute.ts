@@ -1,5 +1,5 @@
 import express,{Router} from "express";
-
+import { compareAi } from "../services/gpt";
 
 const router:Router =express.Router();
 
@@ -15,6 +15,7 @@ router.post("/ocr", async (req, res) => {
     });
 
     const data = await ocrResponse.json();
+    compareAi(data)
     res.json(data);
   } catch (err) {
     console.error(err);
