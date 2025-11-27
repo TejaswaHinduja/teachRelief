@@ -27,6 +27,12 @@ importers:
       '@google-cloud/vision':
         specifier: ^5.3.4
         version: 5.3.4
+      '@google/genai':
+        specifier: ^1.30.0
+        version: 1.30.0
+      '@huggingface/inference':
+        specifier: ^4.13.4
+        version: 4.13.4
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -77,7 +83,7 @@ importers:
         version: 2.0.2
       openai:
         specifier: ^6.9.1
-        version: 6.9.1
+        version: 6.9.1(ws@8.18.3)
       pdf-parse:
         specifier: ^2.4.5
         version: 2.4.5
@@ -260,6 +266,15 @@ packages:
     resolution: {integrity: sha512-KQ/0/klu6jranByRv+BpZbSBFirJNE07AO0wNhUTlYpKRv4UnSvICAVegWXQWN4oljr9EasWyft1667lhFFPAQ==}
     engines: {node: '>=18'}
 
+  '@google/genai@1.30.0':
+    resolution: {integrity: sha512-3MRcgczBFbUat1wIlZoLJ0vCCfXgm7Qxjh59cZi2X08RgWLtm9hKOspzp7TOg1TV2e26/MLxR2GR5yD5GmBV2w==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.20.1
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+
   '@grpc/grpc-js@1.14.0':
     resolution: {integrity: sha512-N8Jx6PaYzcTRNzirReJCtADVoq4z7+1KQ4E70jTg/koQiMoUSN1kbNjPOqpPbhMFhfU1/l7ixspPl8dNY+FoUg==}
     engines: {node: '>=12.10.0'}
@@ -268,6 +283,17 @@ packages:
     resolution: {integrity: sha512-rc1hOQtjIWGxcxpb9aHAfLpIctjEnsDehj0DAiVfBlmT84uvR0uUtN2hEi/ecvWVjXUGf5qPF4qEgiLOx1YIMQ==}
     engines: {node: '>=6'}
     hasBin: true
+
+  '@huggingface/inference@4.13.4':
+    resolution: {integrity: sha512-1G6jBDYLAZw7oNrJdMp+0/CafeoNaCLzrDd9fYSX3nhjzMuyWIPZ/MtP5EwXdC0htlFPx+R6JGqPhctAalQO+w==}
+    engines: {node: '>=18'}
+
+  '@huggingface/jinja@0.5.2':
+    resolution: {integrity: sha512-3KxqfOSYtHDsq6HglCH4BDHGXXHMS7ZHUHpxVGswa4l8ycCCExDR2E4nDlTo9LCa6bxp03ywf/mAIVEsO1Ov1w==}
+    engines: {node: '>=18'}
+
+  '@huggingface/tasks@0.19.65':
+    resolution: {integrity: sha512-ecP5bMLwZRKsln6IhTkicIt8Wzn7cYquKYBkJe7K2qkIvvnhzT32wf9dvvFjRqv+cDzdVxOLEdT0DUkVzGiV5A==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2411,6 +2437,18 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  ws@8.18.3:
+    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
@@ -2494,6 +2532,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@google/genai@1.30.0':
+    dependencies:
+      google-auth-library: 10.4.2
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   '@grpc/grpc-js@1.14.0':
     dependencies:
       '@grpc/proto-loader': 0.8.0
@@ -2505,6 +2552,15 @@ snapshots:
       long: 5.3.2
       protobufjs: 7.5.4
       yargs: 17.7.2
+
+  '@huggingface/inference@4.13.4':
+    dependencies:
+      '@huggingface/jinja': 0.5.2
+      '@huggingface/tasks': 0.19.65
+
+  '@huggingface/jinja@0.5.2': {}
+
+  '@huggingface/tasks@0.19.65': {}
 
   '@humanfs/core@0.19.1': {}
 
@@ -4259,7 +4315,9 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  openai@6.9.1: {}
+  openai@6.9.1(ws@8.18.3):
+    optionalDependencies:
+      ws: 8.18.3
 
   opencollective-postinstall@2.0.3: {}
 
@@ -4940,6 +4998,8 @@ snapshots:
       strip-ansi: 6.0.1
 
   wrappy@1.0.2: {}
+
+  ws@8.18.3: {}
 
   xtend@4.0.2: {}
 
