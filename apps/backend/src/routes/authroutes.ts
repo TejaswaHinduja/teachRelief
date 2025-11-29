@@ -1,97 +1,98 @@
-import express,{Router}from "express";
+import express, { Router } from "express";
 import gentoken from "../middleware/jwt";
 import bcrypt from "bcrypt";
 import { prisma } from "@repo/db";
-import { AuthRequest,protect } from "../middleware/protect";
+import { AuthRequest, protect } from "../middleware/protect";
 
-const router:Router =express.Router();
+const router: Router = express.Router();
 
-router.post("/login",async (req,res)=>{
-    try{
-    const {email,password}=req.body;
-    if(!email || !password){
-        return res.status(403).json({message:"Fill all the fields"})
-    }
-
-    const checkdb=await prisma.user.findUnique({
-        where:{email}
-    })
-    if(!checkdb){
-        return res.status(403).json({message:"Please sign up"})
-    }
-    const checkpass=await bcrypt.compare(password,checkdb.passwordHash)
-    if(!checkpass){
-        return res.status(403).json({message:"invalid creds"})
-    }
-    gentoken(checkdb.id,res)
-    
-    res.status(200).json({message:"Logged In",
-        name:checkdb.name,
-        email:checkdb.email,
-        role:checkdb.role
-    })
-    }
-    catch(error){
-    console.log(error)
-    }
-})
-
-router.post("/signUp",async (req,res)=>{
-    try{
-    const {name,email,password,role}=req.body;
-
-    if(!name||!email||!password||!role){
-        return res.status(403).json({message:"Fill all the fields"})
-    }
-
-    const exisitingUser= await prisma.user.findUnique({
-        where:{email}
-    })
-    if(exisitingUser){
-        return res.status(409).json({message:"User already exists,Please log in"})
-    }
-    const passwordHash=await bcrypt.hash(password,10)
-    
-    const user=await prisma.user.create({
-        data:{
-            name,
-            email,
-            passwordHash,
-            role
+router.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(403).json({ message: "Fill all the fields" })
         }
-    })
-    
-    gentoken(user.id,res);
 
-    res.status(201).json({message:"Signed Up!",
-        user:{
-            name:user.name,
-            email:user.email,
-            role
-        }  
-    });
-}
-catch(error){
-    console.log(error)
-}
+        const checkdb = await prisma.user.findUnique({
+            where: { email }
+        })
+        if (!checkdb) {
+            return res.status(403).json({ message: "Please sign up" })
+        }
+        const checkpass = await bcrypt.compare(password, checkdb.passwordHash)
+        if (!checkpass) {
+            return res.status(403).json({ message: "invalid creds" })
+        }
+        gentoken(checkdb.id, res)
+
+        res.status(200).json({
+            message: "Logged In",
+            name: checkdb.name,
+            email: checkdb.email,
+            role: checkdb.role
+        })
+    }
+    catch (error) {
+        console.log(error)
+    }
 })
 
-router.post("/createroom",protect,async (req:AuthRequest,res)=>{
-    const code=req.user!.id+Date.now().toString().slice(-4);
-    const teacherId=req.body;
-    try{
-        const room=await prisma.room.create({
-            data:{
+router.post("/signUp", async (req, res) => {
+    try {
+        const { name, email, password, role } = req.body;
+
+        if (!name || !email || !password || !role) {
+            return res.status(403).json({ message: "Fill all the fields" })
+        }
+
+        const exisitingUser = await prisma.user.findUnique({
+            where: { email }
+        })
+        if (exisitingUser) {
+            return res.status(409).json({ message: "User already exists,Please log in" })
+        }
+        const passwordHash = await bcrypt.hash(password, 10)
+
+        const user = await prisma.user.create({
+            data: {
+                name,
+                email,
+                passwordHash,
+                role
+            }
+        })
+        gentoken(user.id, res);
+        res.status(201).json({
+            message: "Signed Up!",
+            user: {
+                name: user.name,
+                email: user.email,
+                role
+            }
+        });
+    }
+    catch (error) {
+        console.log(error)
+    }
+})
+
+router.post("/createroom", protect, async (req: AuthRequest, res) => {
+    const code = req.user!.id + Date.now().toString().slice(-4);
+    //@ts-ignore
+    const  userId  = req.user.id;
+    try {
+        const room = await prisma.room.create({
+            data: {
                 code,
-                teacherId
+                teacherId:userId
             }
         })
         res.status(201).json({
-            message:"room created",
-            code:room.code
+            message: "room created",
+            code: room.code
         })
     }
-    catch(error){
+    catch (error) {
         console.log(error)
     }
 })
@@ -114,44 +115,44 @@ router.post("/createroom",protect,async (req:AuthRequest,res)=>{
   }
 })*/
 
-router.post("/joinroom",protect,async(req,res)=>{
-    try{
-        const {roomCode}=req.body;
+router.post("/joinroom", protect, async (req, res) => {
+    try {
+        const { roomCode } = req.body;
         //@ts-ignore
-        const userId=req.user.id;
+        const userId = req.user.id;
         //@ts-ignore
-        if(req.user.role!=="STUDENT"){
-            return res.status(403).json({message:"Not authorized"})
+        if (req.user.role !== "STUDENT") {
+            return res.status(403).json({ message: "Not authorized" })
         }
-        const checkRoom=await prisma.room.findUnique({
-            where:{code:roomCode}
+        const checkRoom = await prisma.room.findUnique({
+            where: { code: roomCode }
         })
-        if(!checkRoom){
-            return res.status(403).json({message:"No such room"})
+        if (!checkRoom) {
+            return res.status(403).json({ message: "No such room" })
         }
-        const checkMembership=await prisma.roomMembership.findFirst({
-            where:{
-                studentId:userId,
-                roomId:checkRoom.id
+        const checkMembership = await prisma.roomMembership.findFirst({
+            where: {
+                studentId: userId,
+                roomId: checkRoom.id
             }
         })
-        if(checkMembership){
-            return res.json({message:"Already joined"})
+        if (checkMembership) {
+            return res.json({ message: "Already joined" })
         }
-        else{
+        else {
             await prisma.roomMembership.create({
-                data:{
-                    roomId:checkRoom.id,
-                    studentId:userId
+                data: {
+                    roomId: checkRoom.id,
+                    studentId: userId
                 }
             })
             return res.json({
-                message:"Room joined",
-                roomId:checkRoom.id
+                message: "Room joined",
+                roomId: checkRoom.id
             })
         }
     }
-    catch(e){
+    catch (e) {
         console.log(e)
     }
 })

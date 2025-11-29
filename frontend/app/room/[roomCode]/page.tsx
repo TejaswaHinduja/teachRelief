@@ -115,6 +115,15 @@ const handleOCR = async () => {
       setLoading(false);
     }
   };
+const createAssigment=async()=>{
+
+  const extractedText=ocrText;
+  
+  return <div>
+    <input placeholder="assignment name"></input>
+  </div>
+}
+
 
 
     return <div>
@@ -140,6 +149,7 @@ const handleOCR = async () => {
           <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
             {loading ? "Extracting OCR..." : "Run OCR on PDF"}
           </Button>
+          <Button onClick={createAssigment}>Create Assignment</Button>
         </div>
           {pdfUrl && (
             <p className="text-sm text-green-600">

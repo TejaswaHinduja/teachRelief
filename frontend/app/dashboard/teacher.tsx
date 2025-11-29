@@ -140,6 +140,17 @@ export default function TeacherDashboard() {
     }
   };
 
+const createAssigment=async()=>{
+
+  const extractedText=ocrText;
+  
+  return <div>
+    <input placeholder="assignment name"></input>
+  </div>
+}
+
+
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
@@ -172,8 +183,7 @@ export default function TeacherDashboard() {
             {loading ? "Extracting OCR..." : "Run OCR on PDF"}
           </Button>
         </div>
-
-        {/* Error Display */}
+        <Button onClick={createAssigment}>Create Assignment</Button>
         {error && (
           <div className="p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
         )}
@@ -185,8 +195,7 @@ export default function TeacherDashboard() {
             <p className="text-sm text-gray-800">{ocrText}</p>
           </div>
         )}
-
-        {/* PDF URL Display (for debugging) */}
+        {/* PDF URL Display */}
         {pdfUrl && (
           <div className="p-2 bg-gray-50 rounded text-xs">
             <strong>PDF URL:</strong> {pdfUrl}
