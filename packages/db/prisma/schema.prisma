@@ -14,39 +14,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id @default(cuid())
-  email String @unique
-  name String
-  passwordHash String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role UserRole @default(STUDENT)
+model User {
+  id              String           @id @default(cuid())
+  email           String           @unique
+  name            String
+  passwordHash    String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  role            UserRole         @default(STUDENT)
   roomMemberships RoomMembership[]
+  submissions     Submission[]
 }
-enum UserRole{
+
+enum UserRole {
   TEACHER
   STUDENT
 }
 
-model Room{
-    id String @unique @default(cuid())
-    code String @unique
-    createAT DateTime @default(now())
-    members RoomMembership[]
+model Room {
+  id          String           @id @default(cuid())
+  code        String           @unique
+  createdAt   DateTime         @default(now())
+  teacherId   String
+  name        String           @default("room name")
+  members     RoomMembership[]
+  assignments Assignment[]
 }
 
-model Chat{
-    id String @id @default(cuid())
-    roomId String 
-    message String
-    userId String 
+model Assignment {
+  id           String       @id @default(cuid())
+  roomId       String
+  title        String       //  "Chapter 1 - Algebra"
+  pdfUrl       String
+  solutionText String       @db.Text 
+  createdAt    DateTime     @default(now())
+  room         Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  submissions  Submission[]
 }
-model RoomMembership{
+
+model Submission {
+  id            String     @id @default(cuid())
+  assignmentId  String
+  studentId     String
+  pdfUrl        String 
+  extractedText String     @db.Text // OCR extracted text from student's solution
+  grade         String? // Result from Gemini AI
+  feedback      String?    @db.Text 
+  createdAt     DateTime   @default(now())
+  gradedAt      DateTime?
+  assignment    Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student       User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, studentId]) // One submission per student per assignment
+}
+
+model RoomMembership {
   id        String   @id @default(cuid())
   roomId    String
   studentId String
   joinedAt  DateTime @default(now())
-  room      Room     @relation(fields: [roomId], references: [id])
-  student   User     @relation(fields: [studentId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, studentId]) 
 }

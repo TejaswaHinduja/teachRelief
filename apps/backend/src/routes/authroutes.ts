@@ -78,11 +78,12 @@ catch(error){
 
 router.post("/createroom",protect,async (req:AuthRequest,res)=>{
     const code=req.user!.id+Date.now().toString().slice(-4);
-
+    const teacherId=req.body;
     try{
         const room=await prisma.room.create({
             data:{
-                code
+                code,
+                teacherId
             }
         })
         res.status(201).json({
@@ -94,26 +95,24 @@ router.post("/createroom",protect,async (req:AuthRequest,res)=>{
         console.log(error)
     }
 })
-
-router.get("/chats/:roomId",async(req , res) =>{
-    try{
-        const roomId=req.params.roomId;
-        const messages=await prisma.chat.findMany({
-            where:{
-                roomId:roomId
-            },
-            orderBy:{
-                id:"desc"
-            },
-            take:50
-        })
-        res.json({messages})
-
-    }
-    catch(e){
-        console.log(e)
-    }
-})
+/*router.get("/chats/:roomId",async(req , res) =>{
+  try{
+      const roomId=req.params.roomId;
+      const messages=await prisma.chat.findMany({
+          where:{
+              roomId:roomId
+          },
+          orderBy:{
+              id:"desc"
+          },
+          take:50
+      })
+      res.json({messages})
+  }
+  catch(e){
+      console.log(e)
+  }
+})*/
 
 router.post("/joinroom",protect,async(req,res)=>{
     try{

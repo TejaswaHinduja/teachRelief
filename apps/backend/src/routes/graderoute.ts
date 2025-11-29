@@ -1,5 +1,6 @@
 import express,{Router} from "express";
 import { compareAi } from "../services/gpt";
+import { prisma } from "@repo/db";
 
 const router:Router =express.Router();
 
@@ -13,9 +14,7 @@ router.post("/ocr", async (req, res) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pdf_url: pdfUrl }),
     });
-
     const data = await ocrResponse.json();
-   // compareAi(data)
     res.json(data);
   } catch (err) {
     console.error(err);
