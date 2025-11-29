@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern"
 import { cn } from "@/lib/utils";
 import { Highlighter } from "@/components/ui/highlighter"
+import Hat from "@/icons/Hat"
 
 export default function Home() {
   const router = useRouter();
@@ -31,21 +32,9 @@ export default function Home() {
         <div className="container mx-auto flex items-center justify-between py-6">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/images/logo/logo-2.svg"
-              alt="logo"
-              width={140}
-              height={30}
-              className="dark:hidden transition duration-300"
-            />
-            <Image
-              src="/images/logo/logo.svg"
-              alt="logo"
-              width={140}
-              height={30}
-              className="hidden dark:block transition duration-300"
-            />
+          <Link href="/" className="flex items-center text-gray-700 dark:text-gray-200 hover:text-primary transition duration-300">
+            <Hat></Hat>
+            Teach Relief
           </Link>
 
           {/* Menu Buttons */}

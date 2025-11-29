@@ -1,22 +1,35 @@
-import express,{Router} from "express";
-
+import express, { Router } from "express";
 import { prisma } from "@repo/db";
-const router:Router=express.Router()
+import { protect, AuthRequest } from "../middleware/protect";
 
-router.post("/createAssignment",async (req,res)=>{
-    const {title,roomId,pdfUrl}=req.body;
-    if(!title||!roomId||!pdfUrl){
-        return res.status(403).json({message:"please enter all the fields"})
-    }
-    else{
-        await prisma.assignment.create({
-            data:{
-                title:title,
-                roomId:roomId,
-                pdfUrl:pdfUrl,
-                solutionText:"123"
+const router: Router = express.Router()
+
+router.post("/createAssignment", protect, async (req: AuthRequest, res) => {
+    try {
+        const { title, roomId, pdfUrl, solutionText } = req.body;
+
+        if (!title || !roomId || !pdfUrl || !solutionText) {
+            return res.status(403).json({ message: "please enter all the fields" })
+        }
+
+        const assignment = await prisma.assignment.create({
+            data: {
+                title,
+                roomId,
+                pdfUrl,
+                solutionText
             }
         })
-    }
 
+        return res.status(201).json({
+            message: "Assignment created successfully",
+            assignmentId: assignment.id
+        })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "Error creating assignment" })
+    }
 })
+
+export default router;
