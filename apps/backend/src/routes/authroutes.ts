@@ -34,6 +34,7 @@ router.post("/login", async (req, res) => {
     }
     catch (error) {
         console.log(error)
+        res.status(500).json({ message: "Error during login" })
     }
 })
 
@@ -73,18 +74,20 @@ router.post("/signUp", async (req, res) => {
     }
     catch (error) {
         console.log(error)
+        res.status(500).json({ message: "Error during signup" })
     }
 })
 
 router.post("/createroom", protect, async (req: AuthRequest, res) => {
-    const code = req.user!.id + Date.now().toString().slice(-4);
-    //@ts-ignore
-    const  userId  = req.user.id;
     try {
+        //@ts-ignore
+        const teacherId = req.user.id; // req.user.id is already a string
+        const code = teacherId + Date.now().toString().slice(-4);
+
         const room = await prisma.room.create({
             data: {
                 code,
-                teacherId:userId
+                teacherId
             }
         })
         res.status(201).json({
@@ -112,7 +115,7 @@ router.post("/createroom", protect, async (req: AuthRequest, res) => {
   }
   catch(e){
       console.log(e)
-  }
+    }
 })*/
 
 router.post("/joinroom", protect, async (req, res) => {
@@ -154,6 +157,34 @@ router.post("/joinroom", protect, async (req, res) => {
     }
     catch (e) {
         console.log(e)
+        res.status(500).json({ message: "Error joining room" })
+    }
+})
+
+// Get room details by roomCode
+router.get("/room/:roomCode", protect, async (req, res) => {
+    try {
+        const { roomCode } = req.params;
+
+        const room = await prisma.room.findUnique({
+            where: { code: roomCode }
+        });
+
+        if (!room) {
+            return res.status(404).json({ message: "Room not found" });
+        }
+
+        return res.json({
+            id: room.id,
+            roomId: room.id, // Include both for compatibility
+            code: room.code,
+            name: room.name,
+            teacherId: room.teacherId
+        });
+    }
+    catch (e) {
+        console.log(e);
+        res.status(500).json({ message: "Error fetching room details" });
     }
 })
 

@@ -4,21 +4,26 @@ import { Button } from "@/components/ui/button"
 import {Label} from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { useState } from "react";
-import {useRouter} from "next/navigation";
+import {useRouter,useParams} from "next/navigation";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
 import { Card,CardBody } from "@heroui/card";
 
 export default function room(){
-const [ocrText, setOcrText] = useState("");
+  const [ocrText, setOcrText] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
-  const [roomCode, setRoomCode] = useState<string | null>(null);
-  const router=useRouter()
+  const [assignmentTitle, setAssignmentTitle] = useState(""); // NEW: For assignment name
+  const [creating, setCreating] = useState(false); // NEW: For create assignment loading state
+  const [success, setSuccess] = useState(""); // NEW: For success messages
+
+  const params = useParams(); // Get URL params
+  const roomCode = params.roomCode as string; // Extract roomCode from URL
+  const router = useRouter();
 
   // Authenticator function for ImageKit upload
-const authenticator = async () => {
+  const authenticator = async () => {
     try {
       const response = await fetch("/api/upload-auth");
       if (!response.ok) {
@@ -36,7 +41,7 @@ const authenticator = async () => {
     }
   };
 
-const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -85,7 +90,7 @@ const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-const handleOCR = async () => {
+  const handleOCR = async () => {
     if (!pdfUrl) {
       setError("Please upload a PDF first");
       return;
@@ -115,50 +120,170 @@ const handleOCR = async () => {
       setLoading(false);
     }
   };
-const createAssigment=async()=>{
 
-  const extractedText=ocrText;
-  
-  return <div>
-    <input placeholder="assignment name"></input>
-  </div>
-}
+  // NEW: Create assignment function
+  const createAssignment = async () => {
+    // Validation
+    if (!assignmentTitle.trim()) {
+      setError("Please enter an assignment title");
+      return;
+    }
+    if (!pdfUrl) {
+      setError("Please upload a PDF first");
+      return;
+    }
+    if (!ocrText) {
+      setError("Please run OCR first to extract solution text");
+      return;
+    }
+    if (!roomCode) {
+      setError("Room code not found");
+      return;
+    }
 
+    setCreating(true);
+    setError("");
+    setSuccess("");
 
+    try {
+      // First, get the roomId from roomCode
+      const roomResponse = await fetch(`http://localhost:1000/api/room/${roomCode}`, {
+        credentials: "include", // Include cookies for authentication
+      });
 
-    return <div>
+      if (!roomResponse.ok) {
+        throw new Error("Failed to fetch room details");
+      }
+
+      const roomData = await roomResponse.json();
+      const roomId = roomData.roomId || roomData.id; // Adjust based on your API response
+
+      // Now create the assignment
+      const response = await fetch("http://localhost:1000/api/assignment/createAssignment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include cookies for JWT auth
+        body: JSON.stringify({
+          title: assignmentTitle,
+          roomId: roomId,
+          pdfUrl: pdfUrl,
+          solutionText: ocrText,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create assignment");
+      }
+
+      const data = await response.json();
+      setSuccess(`Assignment "${assignmentTitle}" created successfully! 🎉`);
+
+      // Reset form
+      setAssignmentTitle("");
+      setPdfUrl("");
+      setOcrText("");
+
+      console.log("Assignment created:", data);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to create assignment");
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto space-y-6">
+      <h1 className="text-3xl font-bold">Room: {roomCode}</h1>
 
       <Card>
         <CardBody>
-          <p>Maths</p>
-        </CardBody>
-      </Card>
-        {/* PDF Upload Section */}
+          <h2 className="text-xl font-semibold mb-4">Create New Assignment</h2>
+
+          {/* Assignment Title Input */}
+          <div className="space-y-2 mb-4">
+            <Label htmlFor="assignment-title">Assignment Title</Label>
+            <Input
+              id="assignment-title"
+              type="text"
+              placeholder="e.g., Chapter 1 - Algebra"
+              value={assignmentTitle}
+              onChange={(e) => setAssignmentTitle(e.target.value)}
+              disabled={uploading || loading || creating}
+            />
+          </div>
+
+          {/* PDF Upload Section */}
         <div className="space-y-2">
         <Label htmlFor="pdf-file">Upload Assignment </Label>
         <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUpload}></Input>
           <Label htmlFor="pdf-file">Upload Solution </Label>
-          <Input
-            id="pdf-file"
-            type="file"
-            accept=".pdf"
-            onChange={handleUpload}
+            <Input
+              id="pdf-file"
+              type="file"
+              accept=".pdf"
+              onChange={handleUpload}
             disabled={uploading || loading}
           />
           <div className="flex justify-center">
           <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
             {loading ? "Extracting OCR..." : "Run OCR on PDF"}
           </Button>
-          <Button onClick={createAssigment}>Create Assignment</Button>
+          <Button onClick={createAssignment}>Create Assignment</Button>
         </div>
-          {pdfUrl && (
-            <p className="text-sm text-green-600">
-              PDF uploaded successfully ✅ 
-            </p>
+            {pdfUrl && (
+              <p className="text-sm text-green-600">
+                PDF uploaded successfully ✅
+              </p>
+            )}
+            {uploading && (
+              <p className="text-sm text-blue-600">Uploading PDF...</p>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 mb-4">
+            <Button
+              onClick={handleOCR}
+              disabled={loading || uploading || !pdfUrl || creating}
+              variant="outline"
+            >
+              {loading ? "Extracting OCR..." : "Run OCR on PDF"}
+            </Button>
+
+            <Button
+              onClick={createAssignment}
+              disabled={creating || !assignmentTitle || !pdfUrl || !ocrText}
+            >
+              {creating ? "Creating..." : "Create Assignment"}
+            </Button>
+          </div>
+
+          {/* OCR Text Display */}
+          {ocrText && (
+            <div className="p-4 bg-gray-50 rounded-md mb-4">
+              <h3 className="font-semibold mb-2">Extracted Solution Text:</h3>
+              <p className="text-sm text-gray-800 whitespace-pre-wrap">{ocrText}</p>
+            </div>
           )}
-          {uploading && (
-            <p className="text-sm text-blue-600">Uploading PDF...</p>
+
+          {/* Error Display */}
+          {error && (
+            <div className="p-3 bg-red-100 text-red-700 rounded-md mb-4">
+              {error}
+            </div>
           )}
-        </div>
+
+          {/* Success Display */}
+          {success && (
+            <div className="p-3 bg-green-100 text-green-700 rounded-md mb-4">
+              {success}
+            </div>
+          )}
+        </CardBody>
+      </Card>
     </div>
-}
+)}
