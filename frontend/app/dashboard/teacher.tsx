@@ -139,18 +139,6 @@ export default function TeacherDashboard() {
       setLoading(false);
     }
   };
-
-const createAssigment=async()=>{
-
-  const extractedText=ocrText;
-  
-  return <div>
-    <input placeholder="assignment name"></input>
-  </div>
-}
-
-
-
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
@@ -183,7 +171,6 @@ const createAssigment=async()=>{
             {loading ? "Extracting OCR..." : "Run OCR on PDF"}
           </Button>
         </div>
-        <Button onClick={createAssigment}>Create Assignment</Button>
         {error && (
           <div className="p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
         )}

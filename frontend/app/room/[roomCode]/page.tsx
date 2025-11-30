@@ -19,7 +19,7 @@ export default function room(){
   const [success, setSuccess] = useState(""); 
 
   const params = useParams(); // Get URL params
-  const roomId = params.roomCode as string; // Extract roomCode from URL
+  const roomId = params.roomCode as string; 
   const router = useRouter();
 
   const authenticator = async () => {
@@ -150,6 +150,9 @@ export default function room(){
       if (!roomResponse.ok) {
         throw new Error("Failed to fetch room details");
       }*/
+     console.log(roomId)
+     console.log(pdfUrl)
+     console.log(assignmentTitle)
 
       const response = await fetch("http://localhost:1000/api/createAssignment", {
         method: "POST",
