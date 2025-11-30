@@ -91,6 +91,7 @@ router.post("/createroom", protect, async (req: AuthRequest, res) => {
             }
         })
         res.status(201).json({
+            roomId:room.id,
             message: "room created",
             code: room.code
         })
@@ -161,7 +162,7 @@ router.post("/joinroom", protect, async (req, res) => {
     }
 })
 
-// Get room details by roomCode
+
 router.get("/room/:roomCode", protect, async (req, res) => {
     try {
         const { roomCode } = req.params;
@@ -175,8 +176,7 @@ router.get("/room/:roomCode", protect, async (req, res) => {
         }
 
         return res.json({
-            id: room.id,
-            roomId: room.id, // Include both for compatibility
+            roomId: room.id, 
             code: room.code,
             name: room.name,
             teacherId: room.teacherId

@@ -14,15 +14,14 @@ export default function room(){
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
-  const [assignmentTitle, setAssignmentTitle] = useState(""); // NEW: For assignment name
-  const [creating, setCreating] = useState(false); // NEW: For create assignment loading state
-  const [success, setSuccess] = useState(""); // NEW: For success messages
+  const [assignmentTitle, setAssignmentTitle] = useState(""); 
+  const [creating, setCreating] = useState(false); 
+  const [success, setSuccess] = useState(""); 
 
   const params = useParams(); // Get URL params
-  const roomCode = params.roomCode as string; // Extract roomCode from URL
+  const roomId = params.roomCode as string; // Extract roomCode from URL
   const router = useRouter();
 
-  // Authenticator function for ImageKit upload
   const authenticator = async () => {
     try {
       const response = await fetch("/api/upload-auth");
@@ -121,9 +120,7 @@ export default function room(){
     }
   };
 
-  // NEW: Create assignment function
   const createAssignment = async () => {
-    // Validation
     if (!assignmentTitle.trim()) {
       setError("Please enter an assignment title");
       return;
@@ -136,7 +133,7 @@ export default function room(){
       setError("Please run OCR first to extract solution text");
       return;
     }
-    if (!roomCode) {
+    if (!roomId) {
       setError("Room code not found");
       return;
     }
@@ -146,25 +143,20 @@ export default function room(){
     setSuccess("");
 
     try {
-      // First, get the roomId from roomCode
-      const roomResponse = await fetch(`http://localhost:1000/api/room/${roomCode}`, {
-        credentials: "include", // Include cookies for authentication
+      /*const roomResponse = await fetch(`http://localhost:1000/api/room/${roomId}`, {
+        credentials: "include", 
       });
 
       if (!roomResponse.ok) {
         throw new Error("Failed to fetch room details");
-      }
+      }*/
 
-      const roomData = await roomResponse.json();
-      const roomId = roomData.roomId || roomData.id; // Adjust based on your API response
-
-      // Now create the assignment
-      const response = await fetch("http://localhost:1000/api/assignment/createAssignment", {
+      const response = await fetch("http://localhost:1000/api/createAssignment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Include cookies for JWT auth
+        credentials: "include", 
         body: JSON.stringify({
           title: assignmentTitle,
           roomId: roomId,
@@ -179,7 +171,7 @@ export default function room(){
       }
 
       const data = await response.json();
-      setSuccess(`Assignment "${assignmentTitle}" created successfully! 🎉`);
+      setSuccess(`Assignment "${assignmentTitle}" created successfully!`);
 
       // Reset form
       setAssignmentTitle("");
@@ -197,8 +189,6 @@ export default function room(){
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold">Room: {roomCode}</h1>
-
       <Card>
         <CardBody>
           <h2 className="text-xl font-semibold mb-4">Create New Assignment</h2>
