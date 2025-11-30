@@ -18,8 +18,8 @@ export default function room(){
   const [creating, setCreating] = useState(false); 
   const [success, setSuccess] = useState(""); 
 
-  const params = useParams(); // Get URL params
-  const roomId = params.roomCode as string; 
+  const params = useParams(); 
+  const roomId = params.roomId as string; 
   const router = useRouter();
 
   const authenticator = async () => {

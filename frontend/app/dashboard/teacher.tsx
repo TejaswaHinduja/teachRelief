@@ -16,7 +16,8 @@ export default function TeacherDashboard() {
   const [error, setError] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
   const [roomCode, setRoomCode] = useState<string | null>(null);
-  const router=useRouter()
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const router = useRouter()
 
   // Authenticator function for ImageKit upload
   const authenticator = async () => {
@@ -128,9 +129,12 @@ export default function TeacherDashboard() {
       });
       const data = await response.json();
       console.log(data);
-      if (data.code) {
-        setRoomCode(data.code);
+
+      if (data.roomId) {
+        setRoomId(data.roomId);
+        setRoomCode(data.code); 
         alert(data.message || "Room created successfully!");
+        router.push(`/room/${data.roomId}`);
       }
     } catch (e) {
       console.log(e);
@@ -149,7 +153,7 @@ export default function TeacherDashboard() {
         </Button>
         {/* Room Code Display */}
         {roomCode && (<div className="flex">
-          <Card isPressable onPress={() => router.push(`/room/{roomCode}`)} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
+          <Card isPressable onPress={() => router.push(`/room/${roomId}`)} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col">
                 <p className="text-md">Room Code</p>
