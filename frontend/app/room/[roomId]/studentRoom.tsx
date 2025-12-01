@@ -11,22 +11,19 @@ export default function StudentRoom(){
     const[uploading,setUploading]=useState("")
     const[ocrText,setOcrText]=useState("")
     const[pdfUrl,setPdfUrl]=useState("")
+
     
     const params=useParams()
+    const roomId=params.roomId as string;
     const assignmentId=params.assignmentId as string;
 
-
+    const response=async ()=>{await fetch("http://localhost:1000/api/assignment/roomId")}
     const submitAnswer=async ()=>{
-        const check
         if(!pdfUrl||!ocrText||!assignmentId){
             return console.log("fields missing")
         }
 
-
     }
-
-
-
     return <div>
 
     </div>
