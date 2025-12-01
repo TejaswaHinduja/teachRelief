@@ -32,4 +32,30 @@ router.post("/createAssignment", protect, async (req: AuthRequest, res) => {
     }
 })
 
+router.get("/assignment/:roomId",protect,async(req:AuthRequest , res)=>{
+    //@ts-ignore
+    const studentId=req.user.id
+    const roomId=req.params.roomId;
+    const checkRoomMembership=await prisma.roomMembership.findFirst({
+        where:{
+            studentId,
+            roomId
+        }
+    })
+    if(!checkRoomMembership){
+        return res.status(403).json({message:"you are not part of the room, join room first"})
+    }
+    const getAssignments=await prisma.assignment.findMany({
+        where:{
+            roomId:roomId
+        },
+        select:{
+        id:true,
+        title:true ,
+        pdfUrl:true
+    }});
+    return res.json({assignments:getAssignments})
+
+})
+
 export default router;
