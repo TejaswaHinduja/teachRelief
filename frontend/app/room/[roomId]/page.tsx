@@ -23,6 +23,6 @@ export default function room(){
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <StudentRoom/>
+      
     </div>
 )}

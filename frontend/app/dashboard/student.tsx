@@ -9,8 +9,7 @@ export default function StudentDashboard() {
   const router=useRouter();
   const [roomCode, setRoomCode] = useState("");
   const [loading,setLoading]=useState(false);
-
-
+  const [roomId,setRoomId]=useState("")
 
   const joinRoom = async () => {
     setLoading(true)
@@ -27,9 +26,10 @@ export default function StudentDashboard() {
 
     const data=await response.json()
     if(data.roomId){
+      setRoomId(data.roomId)
       router.push(`/room/${data.roomId}`)
+      console.log("redirecting to the room ")
     }
-    alert(`Joining room: ${roomCode}`);
   };
 
   return (

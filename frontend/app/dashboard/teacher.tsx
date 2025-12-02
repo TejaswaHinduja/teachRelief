@@ -19,74 +19,6 @@ export default function TeacherDashboard() {
   const [roomId, setRoomId] = useState<string | null>(null);
   const router = useRouter()
 
-  // Authenticator function for ImageKit upload
-  const authenticator = async () => {
-    try {
-      const response = await fetch("/api/upload-auth");
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Request failed with status ${response.status}: ${errorText}`
-        );
-      }
-      const data = await response.json();
-      const { signature, expire, token, publicKey } = data;
-      return { signature, expire, token, publicKey };
-    } catch (error) {
-      console.error("Authentication error:", error);
-      throw new Error("Authentication request failed");
-    }
-  };
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    setError("");
-    setPdfUrl("");
-
-    try {
-      const authParams = await authenticator();
-      const { signature, expire, token, publicKey } = authParams;
-
-      const uploadResponse = await upload({
-        expire,
-        token,
-        signature,
-        publicKey,
-        file,
-        fileName: file.name,
-        onProgress: (event) => {
-          const percent = (event.loaded / event.total) * 100;
-          console.log(`Upload progress: ${percent.toFixed(2)}%`);
-        },
-      });
-
-      if (uploadResponse.url) {
-        setPdfUrl(uploadResponse.url);
-        console.log("Upload successful:", uploadResponse.url);
-      } else {
-        throw new Error("Upload succeeded but no URL was returned");
-      }
-    } catch (error) {
-      if (error instanceof ImageKitAbortError) {
-        setError(`Upload aborted: ${error.reason}`);
-      } else if (error instanceof ImageKitInvalidRequestError) {
-        setError(`Invalid request: ${error.message}`);
-      } else if (error instanceof ImageKitUploadNetworkError) {
-        setError(`Network error: ${error.message}`);
-      } else if (error instanceof ImageKitServerError) {
-        setError(`Server error: ${error.message}`);
-      } else {
-        setError("Upload failed. Please try again.");
-      }
-      console.error("Upload error:", error);
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleOCR = async () => {
     if (!pdfUrl) {
       setError("Please upload a PDF first");
@@ -128,13 +60,13 @@ export default function TeacherDashboard() {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      console.log(data);
 
       if (data.roomId) {
         setRoomId(data.roomId);
         setRoomCode(data.code); 
         alert(data.message || "Room created successfully!");
         router.push(`/room/${data.roomId}`);
+        console.log("redirecting to the room")
       }
     } catch (e) {
       console.log(e);
