@@ -141,7 +141,12 @@ router.post("/joinroom", protect, async (req, res) => {
             }
         })
         if (checkMembership) {
-            return res.json({ message: "Already joined" })
+            return res.json({ 
+                message: "Already joined",
+                roomId: checkRoom.id
+             }
+                
+            )
         }
         else {
             await prisma.roomMembership.create({

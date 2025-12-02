@@ -19,7 +19,7 @@ export default function StudentRoom(){
 
     const idk=async ()=>{
         try {
-        const response=await fetch("http://localhost:1000/api/assignment/:roomId",{
+        const response=await fetch(`http://localhost:1000/api/assignment/${roomId}`,{
             method:"GET",
             credentials:"include"
         })
@@ -35,6 +35,7 @@ export default function StudentRoom(){
       return <div className="flex">
         hi there
         <Card isPressable onPress={idk} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
+            title
         </Card>
 
     </div>
