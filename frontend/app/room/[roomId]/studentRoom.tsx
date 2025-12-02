@@ -28,15 +28,33 @@ export default function StudentRoom(){
         console.log(data)
     }
         catch(error){
+            console.log(error)
+        }
+    }
+    const assignmentDetails=async ()=>{
+        try{
+            const response=await fetch(`http://localhost:1000/api/assignment/${assignmentId}`,{
+                method:"GET",
+                credentials:"include"
+            })
+            const data=await response.json();
+            setTitle(data.title)
+            setPdfUrl(data.pdfUrl)
+        }
+        catch(e){
+            console.log(e)
 
         }
-  
     }
+
+
+
       return <div className="flex">
         hi there
         <Card isPressable onPress={assignmentsInRoom} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
             title
         </Card>
+
 
     </div>
 }
