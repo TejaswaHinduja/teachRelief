@@ -6,29 +6,41 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 
 export default function StudentDashboard() {
-  const router=useRouter();
+  const router = useRouter();
   const [roomCode, setRoomCode] = useState("");
-  const [loading,setLoading]=useState(false);
-  const [roomId,setRoomId]=useState("")
+  const [loading, setLoading] = useState(false);
+  const [roomId, setRoomId] = useState("")
 
   const joinRoom = async () => {
-    setLoading(true)
     if (!roomCode) {
       alert("Please enter a room code");
       return;
     }
-    const response=await fetch("http://localhost:1000/api/joinroom",{
-      method:"POST",
-      credentials:"include",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({roomCode})
-    })
 
-    const data=await response.json()
-    if(data.roomId){
-      setRoomId(data.roomId)
-      router.push(`/room/${data.roomId}`)
-      console.log("redirecting to the room ")
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:1000/api/joinroom", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomCode })
+      });
+
+      const data = await response.json();
+
+      if (data.roomId) {
+        setRoomId(data.roomId);
+        router.push(`/room/${data.roomId}`);
+        console.log("redirecting to the room");
+      } else {
+        alert("Failed to join room. Please check the room code.");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error joining room:", error);
+      alert("An error occurred while joining the room");
+      setLoading(false);
     }
   };
 
@@ -48,7 +60,7 @@ export default function StudentDashboard() {
         </div>
 
         <Button onClick={joinRoom} className="w-full" disabled={loading}>
-          {loading?"Joining Room ...":"Join Room"}
+          {loading ? "Joining Room ..." : "Join Room"}
         </Button>
         <Button variant="outline" className="w-full">
           View My Submissions
