@@ -17,7 +17,7 @@ export default function StudentRoom(){
     const roomId=params.roomId as string;
     const assignmentId=params.assignmentId as string;
 
-    const idk=async ()=>{
+    const assignmentsInRoom=async ()=>{
         try {
         const response=await fetch(`http://localhost:1000/api/assignment/${roomId}`,{
             method:"GET",
@@ -34,7 +34,7 @@ export default function StudentRoom(){
     }
       return <div className="flex">
         hi there
-        <Card isPressable onPress={idk} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
+        <Card isPressable onPress={assignmentsInRoom} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
             title
         </Card>
 

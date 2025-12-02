@@ -58,4 +58,30 @@ router.get("/assignment/:roomId",protect,async(req:AuthRequest , res)=>{
 
 })
 
+router.get("/assignment/:assignmentId",protect,async(req:AuthRequest,res)=>{
+    const roomId=req.body
+    const studentId=req.user?.id;
+    const assignmentId=req.params.assignmentId;
+    const checkRoomMembership=await prisma.roomMembership.findFirst({
+        where:{
+            studentId,
+            roomId
+        }
+    })
+    if(!checkRoomMembership){
+        return res.json({message:"not a part of room"})
+    }
+    const assignmentDetails=await prisma.assignment.findUnique({
+        where:{
+            id:assignmentId
+        },
+        select:{
+            title:true,
+            roomId:true,
+            pdfUrl:true
+        }
+    })
+    return res.json({assignmentDetails})
+
+})
 export default router;
