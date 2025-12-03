@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card,CardBody } from "@heroui/card";
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
+
+
 
 
 export default function StudentRoom(){
@@ -13,9 +15,10 @@ export default function StudentRoom(){
     const [pdfUrl,setPdfUrl]=useState("")
     const [title,setTitle]=useState("")
 
+    const router = useRouter();
     const params=useParams()
     const roomId=params.roomId as string;
-    const assignmentId=params.assignmentId as string;
+    const assignmentId=req.body;
 
     const assignmentsInRoom=async ()=>{
         try {
@@ -32,6 +35,7 @@ export default function StudentRoom(){
         }
     }
     const assignmentDetails=async ()=>{
+
         try{
             const response=await fetch(`http://localhost:1000/api/assignment/${assignmentId}`,{
                 method:"GET",
@@ -40,19 +44,21 @@ export default function StudentRoom(){
             const data=await response.json();
             setTitle(data.title)
             setPdfUrl(data.pdfUrl)
+            router.push(`/room/${roomId}/assignment/${assignmentId}`)
         }
         catch(e){
             console.log(e)
 
         }
     }
-
-
-
       return <div className="flex">
         hi there
         <Card isPressable onPress={assignmentsInRoom} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
             title
+        </Card>
+        <Card isPressable onPress={assignmentDetails}>
+            whats upppp
+
         </Card>
 
 
