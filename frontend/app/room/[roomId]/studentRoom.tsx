@@ -14,11 +14,12 @@ export default function StudentRoom(){
     const [ocrText,setOcrText]=useState("")
     const [pdfUrl,setPdfUrl]=useState("")
     const [title,setTitle]=useState("")
+    const [assignmentId,setAssignmentId]=useState("")
 
     const router = useRouter();
     const params=useParams()
     const roomId=params.roomId as string;
-    const assignmentId=req.body;
+    
 
     const assignmentsInRoom=async ()=>{
         try {
@@ -44,6 +45,7 @@ export default function StudentRoom(){
             const data=await response.json();
             setTitle(data.title)
             setPdfUrl(data.pdfUrl)
+            setAssignmentId(data.assignmentId)
             router.push(`/room/${roomId}/assignment/${assignmentId}`)
         }
         catch(e){
