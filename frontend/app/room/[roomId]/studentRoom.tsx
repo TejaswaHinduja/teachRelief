@@ -34,7 +34,6 @@ export default function StudentRoom() {
             })
             const data = await response.json();
             console.log("API Response:", data)
-
             // The API returns {assignments: [...]}
             if (data.assignments) {
                 setAssignments(data.assignments)

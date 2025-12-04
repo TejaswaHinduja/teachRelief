@@ -22,7 +22,7 @@ export default function Teacherroom(){
   const roomId = params.roomId as string; 
   const router = useRouter();
 
-  const authenticator = async () => {
+   const authenticator = async () => {
     try {
       const response = await fetch("/api/upload-auth");
       if (!response.ok) {
