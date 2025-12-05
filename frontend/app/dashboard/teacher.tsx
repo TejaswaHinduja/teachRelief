@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 
 export default function TeacherDashboard() {
-  const [ocrText, setOcrText] = useState("");
+  const [rooms, setRooms] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -18,38 +18,6 @@ export default function TeacherDashboard() {
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const router = useRouter()
-
-  const handleOCR = async () => {
-    if (!pdfUrl) {
-      setError("Please upload a PDF first");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-    setOcrText("");
-
-    try {
-      const response = await fetch("http://localhost:1000/api/ocr", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pdfUrl }),
-      });
-
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(err || "Failed to fetch OCR text");
-      }
-
-      const data = await response.json();
-      setOcrText(data.text || "No text found in PDF.");
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const createRoom = async () => {
     setLoading(true);
@@ -75,6 +43,20 @@ export default function TeacherDashboard() {
       setLoading(false);
     }
   };
+  const getRooms= async ()=>{
+    const response=await fetch("http://localhost:1000/api/myrooms",{
+      method:"GET",
+      credentials:"include"
+    })
+    const data=response.json();
+
+  }
+
+
+
+
+
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
@@ -99,24 +81,6 @@ export default function TeacherDashboard() {
             </CardBody>
           </Card>
         </div>
-        )}
-
-        {/* OCR Button */}
-        <div className="flex justify-center">
-          <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
-            {loading ? "Extracting OCR..." : "Run OCR on PDF"}
-          </Button>
-        </div>
-        {error && (
-          <div className="p-3 bg-red-100 text-red-700 rounded-md">{error}</div>
-        )}
-
-        {/* OCR Result Display */}
-        {ocrText && (
-          <div className="p-4 bg-gray-50 border rounded-md whitespace-pre-wrap">
-            <h2 className="text-lg font-semibold mb-2">Extracted Text:</h2>
-            <p className="text-sm text-gray-800">{ocrText}</p>
-          </div>
         )}
         {/* PDF URL Display */}
         {pdfUrl && (

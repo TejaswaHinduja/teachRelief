@@ -193,4 +193,18 @@ router.get("/room/:roomCode", protect, async (req, res) => {
     }
 })
 
+router.get("/myrooms",protect, async (req:AuthRequest,res) =>{
+    const teacherId=req.user?.id
+    const getRooms=await prisma.room.findMany({
+        where:{teacherId},
+        select:{
+            name:true,
+            code:true,
+            createdAt:true
+        }
+    })
+    return res.json({getRooms})
+
+})
+
 export default router;
