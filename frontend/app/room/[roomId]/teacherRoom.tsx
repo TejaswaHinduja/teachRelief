@@ -20,6 +20,8 @@ export default function Teacherroom(){
 
   const params = useParams(); 
   const roomId = params.roomId as string; 
+  const assignmentId="cmim0wvz70002rtr46ax3m27v";
+
   const router = useRouter();
 
    const authenticator = async () => {
@@ -189,6 +191,24 @@ export default function Teacherroom(){
       setCreating(false);
     }
   };
+  const viewSubmissions= async () => {
+    try{
+      const response=await fetch("http://localhost:1000/api/view/submissions",{
+        method:"POST",
+        credentials:"include",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({
+          assignmentId
+        })
+      })
+      const data=await response.json()
+      console.log(data)
+    }
+    catch(e){
+      console.log(e)
+    }
+
+  }
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
@@ -278,5 +298,7 @@ export default function Teacherroom(){
           )}
         </CardBody>
       </Card>
+
+      <Button onClick={viewSubmissions}>View Submissions</Button>
     </div>
 )}

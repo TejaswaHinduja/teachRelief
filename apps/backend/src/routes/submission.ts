@@ -34,22 +34,18 @@ router.post("/submission", protect, async (req: AuthRequest, res) => {
     }
 })
 //for teacher to view all the submissions
-router.get("/view/submissions",protect,async(req:AuthRequest,res)=>{
-    
-    const submissionId=req.body;
-    if(!submissionId){
+router.post("/view/submissions",protect,async(req:AuthRequest,res)=>{
+    const {assignmentId}=req.body;
+    if(!assignmentId){
         return res.json({message:"please click on a assignment first"})
     }
     
-    const seeSubmissions=await prisma.submission.findMany({
+    const seeSubmissions=await prisma.assignment.findMany({
         where:{
-            id:submissionId
+            id:assignmentId
         },
         select:{
-            studentId:true,
-            extractedText:true,
-            pdfUrl:true,
-            
+            submissions:true,
         }
     })
     return res.json({submissions:seeSubmissions})
