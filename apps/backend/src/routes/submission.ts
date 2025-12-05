@@ -33,5 +33,27 @@ router.post("/submission", protect, async (req: AuthRequest, res) => {
         return res.status(500).json({ message: "Error creating submission" })
     }
 })
+//for teacher to view all the submissions
+router.get("/view/submissions",protect,async(req:AuthRequest,res)=>{
+    
+    const submissionId=req.body;
+    if(!submissionId){
+        return res.json({message:"please click on a assignment first"})
+    }
+    
+    const seeSubmissions=await prisma.submission.findMany({
+        where:{
+            id:submissionId
+        },
+        select:{
+            studentId:true,
+            extractedText:true,
+            pdfUrl:true,
+            
+        }
+    })
+    return res.json({submissions:seeSubmissions})
+    
+})
 
 export default router;
