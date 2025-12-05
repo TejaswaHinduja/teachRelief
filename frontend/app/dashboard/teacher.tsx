@@ -31,7 +31,7 @@ export default function TeacherDashboard() {
 
       if (data.roomId) {
         setRoomId(data.roomId);
-        setRoomCode(data.code); 
+        setRoomCode(data.code);
         alert(data.message || "Room created successfully!");
         router.push(`/room/${data.roomId}`);
         console.log("redirecting to the room")
@@ -43,14 +43,18 @@ export default function TeacherDashboard() {
       setLoading(false);
     }
   };
-  const getRooms= async ()=>{
-    const response=await fetch("http://localhost:1000/api/myrooms",{
-      method:"GET",
-      credentials:"include"
-    })
-    const data=response.json();
 
-  }
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const response = await fetch("http://localhost:1000/api/myrooms", {
+        method: "GET",
+        credentials: "include"
+      })
+      const data = await response.json();
+      setRooms(data.getRooms);
+    }
+    fetchRooms()
+  }, [])
 
 
 
