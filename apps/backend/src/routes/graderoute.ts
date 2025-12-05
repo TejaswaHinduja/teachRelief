@@ -24,12 +24,9 @@ router.post("/ocr", async (req, res) => {
 });
 
 router.post("/gradeAi",protect,async(req:AuthRequest,res)=>{
-  const submissionId=req.user?.id 
-  if(!submissionId){
-    return
-  }
-  const assignmentId=req.body;
-  if(!assignmentId){
+  const submissionId=req.body.submissionId ;
+  const assignmentId=req.body.assignmentId ;
+  if(!assignmentId||!submissionId){
     return res.json({message:"assignmend doesnt exist"})
   }
   
@@ -49,9 +46,24 @@ router.post("/gradeAi",protect,async(req:AuthRequest,res)=>{
       solutionText:true
     }
   })
-  if(!studentsText||teachersSolution){
+  if(!studentsText||!teachersSolution){
     return res.status(403).json({message:"rubrics not provided yet"})
   }
+
+  const {grade,feedback}=await compareAi(
+    studentsText.extractedText,
+    teachersSolution.solutionText
+  )
+
+  const savegrades=await prisma.submission.update({
+    where:
+    {id:submissionId},
+    data:{
+      grade,
+      feedback,
+      gradedAt:new Date()
+    }
+  })
   return res.json({studentsText,teachersSolution})
 
 })

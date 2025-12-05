@@ -33,8 +33,7 @@ router.post("/createAssignment", protect, async (req: AuthRequest, res) => {
 })
 
 router.get("/assignment/:roomId",protect,async(req:AuthRequest , res)=>{
-    //@ts-ignore
-    const studentId=req.user.id
+    const studentId=req.user?.id
     const roomId=req.params.roomId;
     const checkRoomMembership=await prisma.roomMembership.findFirst({
         where:{
