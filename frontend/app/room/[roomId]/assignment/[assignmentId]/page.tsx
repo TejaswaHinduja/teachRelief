@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
 import { useParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 
 export default function assignment(){
@@ -11,13 +14,11 @@ export default function assignment(){
     const[pdfUrl,setPdfUrl]=useState("")
     const[ocrText,setOcrText]=useState("")
     const[submitting,setSubmitting]=useState(false)
-    //const[assignmentId,setAssignmentId]=useState(false)
+    const[loading,setLoading]=useState(false)    //const[assignmentId,setAssignmentId]=useState(false)
 
     const params=useParams();
     const assignmentId=params.assignmentId as string;
-
-
-
+    console.log(assignmentId)
 
 
     const authenticator = async () => {
@@ -86,6 +87,36 @@ export default function assignment(){
           setUploading(false);
         }
       };
+    const handleOCR = async () => {
+    if (!pdfUrl) {
+      setError("Please upload a PDF first");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setOcrText("");
+
+    try {
+      const response = await fetch("http://localhost:1000/api/ocr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pdfUrl }),
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(err || "Failed to fetch OCR text");
+      }
+
+      const data = await response.json();
+      setOcrText(data.text || "No text found in PDF.");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
     const submit= async () => {
@@ -94,9 +125,10 @@ export default function assignment(){
             return;
         }
         setSubmitting(true)
-        const response=await fetch("localhost://1000/api/submission",{
+        const response=await fetch("http://localhost:1000/api/submission",{
             method:"POST",
             credentials:"include",
+            headers:{"Content-Type":"application/json"},
             body:JSON.stringify({
                 assignmentId:assignmentId,
                 pdfUrl:pdfUrl,
@@ -107,11 +139,14 @@ export default function assignment(){
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to create assignment");
         }
-        
-
-
     }
     return <div>
+        <Input  type="file" accept=".pdf" onChange={handleUpload}></Input>
+        <Button onClick={handleOCR} disabled={loading||uploading||!pdfUrl}>
+          {loading?"extracting ocr":"RUN OCR"}
+        </Button>
+        <Button onClick={submit}>{loading?"Submitting Solution":"Submit Solution"}</Button>
+
         whats up 
     </div>
 }
