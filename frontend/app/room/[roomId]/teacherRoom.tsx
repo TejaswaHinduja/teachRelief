@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import {Label} from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {useRouter,useParams} from "next/navigation";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
 import { Card,CardBody } from "@heroui/card";
@@ -16,7 +16,8 @@ export default function Teacherroom(){
   const [pdfUrl, setPdfUrl] = useState("");
   const [assignmentTitle, setAssignmentTitle] = useState(""); 
   const [creating, setCreating] = useState(false); 
-  const [success, setSuccess] = useState(""); 
+  const [success, setSuccess] = useState("");
+  const [submissions,setSubmissions]=useState<any[]>([])
 
   const params = useParams(); 
   const roomId = params.roomId as string; 
@@ -191,8 +192,12 @@ export default function Teacherroom(){
       setCreating(false);
     }
   };
+
+
+  useEffect(()=>{
   const viewSubmissions= async () => {
     try{
+      setLoading(true)
       const response=await fetch("http://localhost:1000/api/view/submissions",{
         method:"POST",
         credentials:"include",
@@ -202,13 +207,17 @@ export default function Teacherroom(){
         })
       })
       const data=await response.json()
+      setSubmissions(data.submissions)
       console.log(data)
     }
     catch(e){
       console.log(e)
     }
-
+    finally{setLoading(false)}
   }
+  viewSubmissions()
+},[])
+
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
@@ -300,5 +309,20 @@ export default function Teacherroom(){
       </Card>
 
       <Button onClick={viewSubmissions}>View Submissions</Button>
+      <div>
+        {submissions.map((submission)=>{
+          return (
+            <Card className="border-2 border-gray"
+            key={submission.submissions.id}
+            >
+              <CardBody>
+                {submission.id}
+                {submission.studentId}
+              </CardBody>
+
+            </Card>
+          )
+        })}
+      </div>
     </div>
 )}
