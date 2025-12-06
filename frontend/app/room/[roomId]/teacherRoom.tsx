@@ -196,14 +196,18 @@ export default function Teacherroom(){
   useEffect(()=>{
     const viewAssignments= async() => {
     try{
-      const response=await fetch(`http://localhost:1000/api/teacher/assignment/${roomId}`)
+      const response=await fetch(`http://localhost:1000/api/teacher/assignment/${roomId}`,{
+        method:"GET",
+        credentials:"include"
+      })
       const data = await response.json();
 
     }
     catch(e){
-
+        console.log(e)
     }
     finally{
+      setLoading(false)
 
     }
 
