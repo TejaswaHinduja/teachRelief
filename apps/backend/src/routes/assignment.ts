@@ -83,4 +83,21 @@ router.get("/assignment/:assignmentId",protect,async(req:AuthRequest,res)=>{
     return res.json({assignmentDetails})
 
 })
+
+
+router.get("/teacher/assignment/:roomId",protect,async(req:AuthRequest,res)=>{
+    const teacherId=req.user?.id;
+    const roomId=req.params.roomId;
+    const getAssignments=await prisma.assignment.findMany({
+        where:{
+            roomId
+        },
+        select:{
+            title:true,
+            pdfUrl:true,
+            id:true
+        }
+    })
+    return res.json({getAssignments})
+})
 export default router;

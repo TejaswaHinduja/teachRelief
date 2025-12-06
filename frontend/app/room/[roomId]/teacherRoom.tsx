@@ -192,9 +192,27 @@ export default function Teacherroom(){
       setCreating(false);
     }
   };
-
-
+ 
   useEffect(()=>{
+    const viewAssignments= async() => {
+    try{
+      const response=await fetch(`http://localhost:1000/api/teacher/assignment/${roomId}`)
+      const data = await response.json();
+
+    }
+    catch(e){
+
+    }
+    finally{
+
+    }
+
+  }
+  },[])
+  
+
+
+ 
   const viewSubmissions= async () => {
     try{
       setLoading(true)
@@ -215,8 +233,7 @@ export default function Teacherroom(){
     }
     finally{setLoading(false)}
   }
-  viewSubmissions()
-},[])
+
 
 
   return (
