@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 
 export default function TeacherDashboard() {
-  const [rooms, setRooms] = useState("");
+  const [rooms, setRooms] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -46,26 +46,48 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     const fetchRooms = async () => {
-      const response = await fetch("http://localhost:1000/api/myrooms", {
-        method: "GET",
-        credentials: "include"
-      })
-      const data = await response.json();
-      setRooms(data.getRooms);
+      try {
+        setLoading(true)
+        const response = await fetch("http://localhost:1000/api/myrooms", {
+          method: "GET",
+          credentials: "include"
+        })
+        const data = await response.json();
+        setRooms(data.getRooms);
+      }
+      catch (e) {
+        console.log(e)
+      }
+      finally {
+        setLoading(false)
+      }
     }
     fetchRooms()
   }, [])
-
-
-
-
-
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
 
       <div className="space-y-4">
+        <div className="flex ">
+          {rooms.map((room) => {
+            return (
+              <Card className="flex col space-x-4 border-2 border-gray-200 hover:border-gray-300 transition-colors"
+                isPressable
+                onPress={() => { router.push(`/room/${room.id}`) }}
+                key={room.id}
+              >
+                <CardBody className="">
+                  {room.code}
+                  {room.name}
+                  {room.id}
+                </CardBody>
+              </Card>
+            );
+          })}
+        </div>
+
         <Button onClick={createRoom} className="w-full" disabled={loading}>
           {loading ? "Creating Room..." : "Create Room"}
         </Button>
@@ -86,6 +108,7 @@ export default function TeacherDashboard() {
           </Card>
         </div>
         )}
+
         {/* PDF URL Display */}
         {pdfUrl && (
           <div className="p-2 bg-gray-50 rounded text-xs">

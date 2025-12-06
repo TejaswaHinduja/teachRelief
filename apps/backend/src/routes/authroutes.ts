@@ -200,7 +200,8 @@ router.get("/myrooms",protect, async (req:AuthRequest,res) =>{
         select:{
             name:true,
             code:true,
-            createdAt:true
+            createdAt:true,
+            id:true
         }
     })
     return res.json({getRooms})
