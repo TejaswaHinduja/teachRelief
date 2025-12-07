@@ -18,6 +18,7 @@ export default function Teacherroom(){
   const [creating, setCreating] = useState(false); 
   const [success, setSuccess] = useState("");
   const [submissions,setSubmissions]=useState<any[]>([])
+  const [assignments,setAssignments]=useState<any[]>([])
 
   const params = useParams(); 
   const roomId = params.roomId as string; 
@@ -201,22 +202,22 @@ export default function Teacherroom(){
         credentials:"include"
       })
       const data = await response.json();
-
+      setAssignments(data.getAssignments);
     }
     catch(e){
         console.log(e)
+        setError("failed to fetch assignments")
     }
     finally{
       setLoading(false)
-
     }
-
   }
-  },[])
+  if(roomId){
+  viewAssignments()
+}
+  },[roomId])
   
 
-
- 
   const viewSubmissions= async () => {
     try{
       setLoading(true)
@@ -237,7 +238,6 @@ export default function Teacherroom(){
     }
     finally{setLoading(false)}
   }
-
 
 
   return (
@@ -328,13 +328,35 @@ export default function Teacherroom(){
           )}
         </CardBody>
       </Card>
+      {/*Assignments Section*/}
+
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Your Assignments</h2>
+        
+        {loading && <p>Loading assignments...</p>}
+        
+        {!loading && assignments.length === 0 && (
+          <p className="text-gray-500">No assignments yet. Create one above!</p>
+        )}
+        
+        {assignments.map((assignment) => (
+          <Card key={assignment.id} className="border-2 border-gray-200">
+            <CardBody>
+              <h3 className="font-semibold">{assignment.title}</h3>
+              <p className="text-sm text-gray-500">
+                Created: {new Date(assignment.createdAt).toLocaleDateString()}
+              </p>
+            </CardBody>
+          </Card>
+        ))}
+      </div>
 
       <Button onClick={viewSubmissions}>View Submissions</Button>
       <div>
         {submissions.map((submission)=>{
           return (
             <Card className="border-2 border-gray"
-            key={submission.submissions.id}
+            key={submission.id}
             >
               <CardBody>
                 {submission.id}

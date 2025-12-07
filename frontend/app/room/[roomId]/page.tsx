@@ -30,14 +30,19 @@ export default function room(){
         router.push("/auth/login");
         return;
       }
-  
+      
       setUserRole(role);
       setUserName(name || "User");
     }, [router]);
-
+    if(userRole===null){
+        return <div className="p-6">
+          Loading ...
+        </div>
+      }
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
+      
       {userRole==="TEACHER"?(
         <TeacherRoom/> ) :
         (<StudentRoom/>

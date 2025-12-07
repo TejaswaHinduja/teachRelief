@@ -12,6 +12,7 @@ interface Assignment {
     pdfUrl: string;
 }
 
+
 export default function StudentRoom() {
     const [assignments, setAssignments] = useState<Assignment[]>([])
     const [loading, setLoading] = useState(true)
@@ -20,7 +21,7 @@ export default function StudentRoom() {
     const params=useParams()
     const roomId=params.roomId as string;
 
-    // Fetch assignments when component mounts
+    
     useEffect(() => {
         fetchAssignments();
     }, [roomId])
