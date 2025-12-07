@@ -310,7 +310,6 @@ export default function Teacherroom(){
         </CardBody>
       </Card>
       {/*Assignments Section*/}
-
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Your Assignments</h2>
         

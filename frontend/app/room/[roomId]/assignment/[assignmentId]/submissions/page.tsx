@@ -33,8 +33,27 @@ useEffect(()=>{
     }
     finally{setLoading(false)}
   }
+  viewSubmissions()
+},[])
 
-})
+return <>
+{submissions.map((submission)=>{
+    <Card
+    key={assignmentId}
+    >
+        <CardBody>
+            {submissions}
+
+        </CardBody>
+    </Card>
 
 
+
+})}
+
+
+
+
+
+</>
 }
