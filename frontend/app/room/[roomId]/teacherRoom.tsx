@@ -218,26 +218,7 @@ export default function Teacherroom(){
   },[roomId])
   
 
-  const viewSubmissions= async () => {
-    try{
-      setLoading(true)
-      const response=await fetch("http://localhost:1000/api/view/submissions",{
-        method:"POST",
-        credentials:"include",
-        headers:{"content-type":"application/json"},
-        body:JSON.stringify({
-          assignmentId
-        })
-      })
-      const data=await response.json()
-      setSubmissions(data.submissions)
-      console.log(data)
-    }
-    catch(e){
-      console.log(e)
-    }
-    finally{setLoading(false)}
-  }
+  
 
 
   return (
@@ -340,7 +321,7 @@ export default function Teacherroom(){
         )}
         
         {assignments.map((assignment) => (
-          <Card key={assignment.id} className="border-2 border-gray-200">
+          <Card isPressable onPress={()=>{router.push(`assignment/${assignmentId}/submissions`)}}key={assignment.id} className="border-2 border-gray-200">
             <CardBody>
               <h3 className="font-semibold">{assignment.title}</h3>
               <p className="text-sm text-gray-500">
@@ -349,23 +330,6 @@ export default function Teacherroom(){
             </CardBody>
           </Card>
         ))}
-      </div>
-
-      <Button onClick={viewSubmissions}>View Submissions</Button>
-      <div>
-        {submissions.map((submission)=>{
-          return (
-            <Card className="border-2 border-gray"
-            key={submission.id}
-            >
-              <CardBody>
-                {submission.id}
-                {submission.studentId}
-              </CardBody>
-
-            </Card>
-          )
-        })}
       </div>
     </div>
 )}
