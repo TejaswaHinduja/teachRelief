@@ -71,7 +71,7 @@ export default function TeacherDashboard() {
 
       <div className="space-y-4">
         <div className="flex ">
-          {rooms.map((room) => {
+          {rooms?.map((room) => {
             return (
               <Card className="flex col space-x-4 border-2 border-gray-200 hover:border-gray-300 transition-colors"
                 isPressable

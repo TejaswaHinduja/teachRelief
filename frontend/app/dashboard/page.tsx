@@ -28,9 +28,6 @@ export default function DashboardPage() {
   }, [router]);
 
 
-  if (userRole === null) {
-    return <div className="p-8 text-center">Loading...</div>;
-  }
 
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-6">

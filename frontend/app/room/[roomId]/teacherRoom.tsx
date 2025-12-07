@@ -22,7 +22,7 @@ export default function Teacherroom(){
 
   const params = useParams(); 
   const roomId = params.roomId as string; 
-  const assignmentId="cmim0wvz70002rtr46ax3m27v";
+  const assignmentId=params.assignmentdId as string
 
   const router = useRouter();
 
@@ -217,10 +217,6 @@ export default function Teacherroom(){
 }
   },[roomId])
   
-
-  
-
-
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <Card>
@@ -320,7 +316,7 @@ export default function Teacherroom(){
         )}
         
         {assignments.map((assignment) => (
-          <Card isPressable onPress={()=>{router.push(`assignment/${assignmentId}/submissions`)}}key={assignment.id} className="border-2 border-gray-200">
+          <Card isPressable onPress={()=>{router.push(`/room/${roomId}/assignment/${assignment.id}/submissions`)}}key={assignment.id} className="border-2 border-gray-200">
             <CardBody>
               <h3 className="font-semibold">{assignment.title}</h3>
               <p className="text-sm text-gray-500">

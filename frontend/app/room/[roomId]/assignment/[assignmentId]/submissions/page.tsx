@@ -34,26 +34,21 @@ useEffect(()=>{
     finally{setLoading(false)}
   }
   viewSubmissions()
-},[])
+},[assignmentId])
 
 return <>
 {submissions.map((submission)=>{
+    return (
     <Card
-    key={assignmentId}
+    key={submission.id}
     >
         <CardBody>
-            {submissions}
+            {submission.studentId}
+            {submission.grade}
 
         </CardBody>
     </Card>
-
-
-
+    )
 })}
-
-
-
-
-
 </>
 }
