@@ -40,7 +40,7 @@ router.post("/view/submissions",protect,async(req:AuthRequest,res)=>{
         return res.json({message:"please click on a assignment first"})
     }
     
-    const seeSubmissions=await prisma.assignment.findMany({
+    const seeSubmissions=await prisma.assignment.findUnique({
         where:{
             id:assignmentId
         },
