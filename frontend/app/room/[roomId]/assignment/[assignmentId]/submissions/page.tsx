@@ -40,11 +40,13 @@ return <>
 {submissions.map((submission)=>{
     return (
     <Card
+    className="border-gray-200 "
     key={submission.id}
     >
         <CardBody>
             {submission.studentId}
             {submission.grade}
+            {submission.assignmentId}
 
         </CardBody>
     </Card>
