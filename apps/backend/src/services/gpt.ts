@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv"
 dotenv.config()
 const apikey = process.env.GEMINI_API_KEY;
-console.log(apikey)
+
 //@ts-ignore
 const ai = new GoogleGenAI({ apikey });
 
@@ -23,7 +23,6 @@ Respond with ONLY a JSON object (no markdown, no code blocks) in this exact form
     contents:prompt
   });
 
-  // Get the text response
   //@ts-ignore
   let textResponse: string = response.text || "";
 

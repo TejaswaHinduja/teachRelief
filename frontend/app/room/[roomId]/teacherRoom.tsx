@@ -248,24 +248,10 @@ export default function Teacherroom(){
               onChange={handleUpload}
             disabled={uploading || loading}
           />
-          <div className="flex justify-center">
-          <Button onClick={handleOCR} disabled={loading || uploading || !pdfUrl}>
-            {loading ? "Extracting OCR..." : "Run OCR on PDF"}
-          </Button>
-          <Button onClick={createAssignment}>Create Assignment</Button>
-        </div>
-            {pdfUrl && (
-              <p className="text-sm text-green-600">
-                PDF uploaded successfully ✅
-              </p>
-            )}
-            {uploading && (
-              <p className="text-sm text-blue-600">Uploading PDF...</p>
-            )}
-          </div>
+         </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 mb-4">
+          <div className="flex space-y-2 space-x-1 gap-3 mb-4">
             <Button
               onClick={handleOCR}
               disabled={loading || uploading || !pdfUrl || creating}
