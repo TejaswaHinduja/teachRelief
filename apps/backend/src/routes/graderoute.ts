@@ -64,7 +64,7 @@ router.post("/gradeAi",protect,async(req:AuthRequest,res)=>{
       gradedAt:new Date()
     }
   })
-  return res.json({studentsText,teachersSolution})
+  return res.json({savegrades})
 
 })
 

@@ -13,7 +13,10 @@ export default function Submissions(){
     const assignmentId=params.assignmentId as string
 
 useEffect(()=>{
-    const viewSubmissions= async () => {
+  viewSubmissions()
+},[assignmentId])
+
+const viewSubmissions= async () => {
     try{
       setLoading(true)
       const response=await fetch("http://localhost:1000/api/view/submissions",{
@@ -33,8 +36,16 @@ useEffect(()=>{
     }
     finally{setLoading(false)}
   }
-  viewSubmissions()
-},[assignmentId])
+
+const grade= async (submissionId:string) =>{
+  const response=await fetch(`http://localhost:1000/api/gradeAi`,{
+    method:"POST",
+    credentials:"include",
+    headers:{"content-type":"application/json"},
+    body:JSON.stringify({assignmentId,submissionId})
+  })
+
+}
 
 return <>
 {submissions.map((submission)=>{
@@ -47,6 +58,9 @@ return <>
             {submission.studentId}
             {submission.grade}
             {submission.assignmentId}
+            <Button onClick={()=>{
+              grade(submission.id)
+            }}>Grade this assignment</Button>
 
         </CardBody>
     </Card>
