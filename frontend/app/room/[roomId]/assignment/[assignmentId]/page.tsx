@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Card, CardBody } from "@heroui/card";
 
 
 export default function assignment(){
@@ -13,15 +14,13 @@ export default function assignment(){
     const[error,setError]=useState("")
     const[pdfUrl,setPdfUrl]=useState("")
     const[ocrText,setOcrText]=useState("")
+    const[sucess,setSuccess]=useState(false)
     const[submitting,setSubmitting]=useState(false)
     const[loading,setLoading]=useState(false)    //const[assignmentId,setAssignmentId]=useState(false)
-
     const params=useParams();
     const assignmentId=params.assignmentId as string;
-    console.log(assignmentId)
 
-
-    const authenticator = async () => {
+  const authenticator = async () => {
         try {
           const response = await fetch("/api/upload-auth");
           if (!response.ok) {
@@ -37,9 +36,8 @@ export default function assignment(){
           console.error("Authentication error:", error);
           throw new Error("Authentication request failed");
         }
-      };
-    
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  };
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
     
@@ -86,8 +84,8 @@ export default function assignment(){
         } finally {
           setUploading(false);
         }
-      };
-    const handleOCR = async () => {
+  };
+  const handleOCR = async () => {
     if (!pdfUrl) {
       setError("Please upload a PDF first");
       return;
@@ -117,9 +115,7 @@ export default function assignment(){
       setLoading(false);
     }
   };
-
-
-    const submit= async () => {
+  const submit= async () => {
         if(!pdfUrl||!ocrText){
             setError("upload pdf and run ocr")
             return;
@@ -139,14 +135,23 @@ export default function assignment(){
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to create assignment");
         }
-    }
-    return <div>
-        <Input  type="file" accept=".pdf" onChange={handleUpload}></Input>
+  };
+
+    return <div className="justify-center  items-center py-4 space-y-4 space-x-2 min-h-screen">
+      <Card className="border-gray-200 border-4 w-70 ">
+        <CardBody>
+          {assignmentId}
+        </CardBody>
+
+      </Card>
+      <div className="py-4">
+          <Input  type="file" accept=".pdf" onChange={handleUpload}></Input>
+      </div>
+      <div className="flex justify-center items-center px-2 space-x-2">
         <Button onClick={handleOCR} disabled={loading||uploading||!pdfUrl}>
           {loading?"extracting ocr":"RUN OCR"}
         </Button>
         <Button onClick={submit}>{loading?"Submitting Solution":"Submit Solution"}</Button>
-
-        whats up 
+        </div>
     </div>
 }

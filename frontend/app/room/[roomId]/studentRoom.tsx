@@ -20,7 +20,6 @@ export default function StudentRoom() {
     const router = useRouter();
     const params=useParams()
     const roomId=params.roomId as string;
-
     
     useEffect(() => {
         fetchAssignments();
