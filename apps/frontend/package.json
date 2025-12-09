@@ -8,8 +8,6 @@
     "start": "next start",
     "lint": "eslint"
   },
- 
-    
   "dependencies": {
     "@heroui/card": "^2.2.25",
     "@repo/db": "workspace:*",
@@ -19,13 +17,11 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@uploadthing/react": "^7.3.3",
     "class-variance-authority": "^0.7.1",
-    "cloudinary": "^2.8.0",
     "clsx": "^2.1.1",
     "imagekit": "^6.0.0",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "next": "15.5.4",
-    "next-cloudinary": "^6.16.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.66.0",
