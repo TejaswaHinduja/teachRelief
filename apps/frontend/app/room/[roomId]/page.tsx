@@ -10,7 +10,7 @@ import { Card,CardBody } from "@heroui/card";
 import TeacherRoom from "./teacherRoom"
 import StudentRoom from "./studentRoom";
 
-export default function room(){
+export default function Room(){
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams, notFound, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -10,14 +10,16 @@ import Link from "next/link";
 
 export default function SignPage() {
   const { type } = useParams();
-  const router = useRouter(); 
+  const router = useRouter();
 
-  if (typeof type !== "string") return null;
+  if (typeof type !== "string") {
+    // We can't return here because of hooks constraints, but we can't use 'type' safely either.
+    // However, hooks must be unconditional.
+  }
 
-  const allowed = ["login", "signup"];
-  if (!allowed.includes(type)) notFound();
-
-  const signup = type === "signup";
+  // We'll proceed assuming it's valid for the hook setup, then check before render/effects.
+  const isValidType = typeof type === "string" && ["login", "signup"].includes(type);
+  const signup = typeof type === "string" && type === "signup";
 
   type formValues = {
     email: string;
@@ -26,9 +28,12 @@ export default function SignPage() {
     role: "STUDENT" | "TEACHER"
   };
 
-  const { register, handleSubmit, control, formState: { errors }, } = useForm<formValues>({
+  const { register, handleSubmit, control } = useForm<formValues>({
     defaultValues: { name: "", email: "", password: "", role: "STUDENT" },
   });
+
+  if (typeof type !== "string") return null;
+  if (!isValidType) notFound();
 
   async function onSubmit(values: formValues) {
     const endpoint = signup ? "signup" : "login";
