@@ -97,7 +97,7 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
 
-  frontend:
+  apps/frontend:
     dependencies:
       '@heroui/card':
         specifier: ^2.2.25
@@ -116,7 +116,7 @@ importers:
         version: 1.2.4(@types/react@19.1.0)(react@19.1.0)
       '@repo/db':
         specifier: workspace:*
-        version: link:../packages/db
+        version: link:../../packages/db
       '@uploadthing/react':
         specifier: ^7.3.3
         version: 7.3.3(next@15.5.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(uploadthing@7.7.4(express@5.2.1)(next@15.5.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(tailwindcss@4.1.17))
