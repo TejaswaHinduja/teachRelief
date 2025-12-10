@@ -7,6 +7,7 @@ import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern"
 import { cn } from "@/lib/utils";
 import { Highlighter } from "@/components/ui/highlighter"
 import Hat from "@/icons/Hat"
+import { Card, CardBody } from "@heroui/card";
 
 export default function Home() {
   const router = useRouter();
@@ -103,36 +104,48 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-center mb-12">How it Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {/* Step 1 */}
-            <div className="flex flex-col items-center text-center p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg">
-              <div className="w-16 h-16 rounded-full bg-blue-500 text-white flex items-center justify-center text-2xl font-bold mb-4">
-                1
-              </div>
-              <h3 className="text-2xl font-semibold mb-3">Upload Assignment</h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                Teachers provide the assignment and solution key to establish the grading criteria.
-              </p>
+            <div className="flex flex-col ">
+              <Card className="items-center text-center p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg" >
+                <CardBody className="justify-center items-center">
+                  <div className="w-16 h-16 rounded-full bg-blue-500 text-white flex items-center justify-center text-2xl font-bold mb-4">
+                    1
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-3">Upload Assignment</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Teachers provide the assignment and solution key to establish the grading criteria.
+                  </p>
+                </CardBody>
+              </Card>
             </div>
 
             {/* Step 2 */}
-            <div className="flex flex-col items-center text-center p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg">
-              <div className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center text-2xl font-bold mb-4">
-                2
-              </div>
-              <h3 className="text-2xl font-semibold mb-3">Student Submission</h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                Students upload their answers through a simple and intuitive interface.
-              </p>
+            <div className="flex flex-col ">
+              <Card className="items-center text-center p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg">
+                <CardBody className="justify-center items-center">
+                  <div className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center text-2xl font-bold mb-4">
+                    2
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-3">Student Submission</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Students upload their answers through a simple and intuitive interface.
+                  </p>
+                </CardBody>
+              </Card>
             </div>
 
             {/* Step 3 */}
-            <div className="flex flex-col items-center text-center p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg">
-              <div className="w-16 h-16 rounded-full bg-purple-500 text-white flex items-center justify-center text-2xl font-bold mb-4">
-                3
-              </div>
-              <h3 className="text-2xl font-semibold mb-3">Instant Grading</h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                AI compares student work to the solution key and provides detailed feedback instantly.
-              </p>
+            <div className="flex flex-col ">
+              <Card className="items-center text-center p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg">
+                <CardBody className="justify-center items-center">
+                  <div className="w-16 h-16 rounded-full bg-purple-500 text-white flex items-center justify-center text-2xl font-bold mb-4">
+                    3
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-3">Instant Grading</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    AI compares student work to the solution key and provides detailed feedback instantly.
+                  </p>
+                </CardBody>
+              </Card>
             </div>
           </div>
         </div>
