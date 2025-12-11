@@ -1,0 +1,68 @@
+# Dependencies
+node_modules
+**/node_modules
+**/.pnpm-store
+
+# Build outputs (will be rebuilt in container)
+**/dist
+**/.next
+**/out
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Environment files (should be mounted or passed separately)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.Python
+*.egg-info
+.eggs
+.pytest_cache
+.mypy_cache
+venv
+.venv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp
+temp
+*.tmp
+
+# Documentation
+*.md
+!README.md
+
+# CI/CD
+.github
+
+# Turbo cache
+.turbo
+
+# Generated files that will be rebuilt
+packages/db/generated
+

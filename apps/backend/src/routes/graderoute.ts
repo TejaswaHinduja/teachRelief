@@ -9,8 +9,10 @@ router.post("/ocr", async (req, res) => {
   const { pdfUrl } = req.body;
   if (!pdfUrl) return res.status(400).json({ error: "Missing pdfUrl" });
 
+  const ocrServiceUrl = process.env.OCR_SERVICE_URL || "http://localhost:8000";
+  
   try {
-    const ocrResponse = await fetch("http://localhost:8000/ocr", {
+    const ocrResponse = await fetch(`${ocrServiceUrl}/ocr`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pdf_url: pdfUrl }),
