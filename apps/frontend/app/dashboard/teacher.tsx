@@ -3,7 +3,6 @@ import { CopyButton } from "@/components/ui/copy-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
 import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
 import { useRouter } from "next/navigation";
 
@@ -90,6 +89,7 @@ export default function TeacherDashboard() {
         <Button onClick={createRoom} className="w-full" disabled={loading}>
           {loading ? "Creating Room..." : "Create Room"}
         </Button>
+        
         {/* Room Code Display */}
         {roomCode && (<div className="flex">
           <Card isPressable onPress={() => router.push(`/room/${roomId}`)} className="border-2 border-gray-200 hover:border-gray-300 transition-colors">
