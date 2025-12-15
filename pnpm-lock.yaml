@@ -127,7 +127,7 @@ importers:
         specifier: ^0.546.0
         version: 0.546.0(react@19.1.0)
       motion:
-        specifier: ^12.23.24
+        specifier: ^12.23.25
         version: 12.23.25(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: 15.5.7
@@ -145,7 +145,7 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1
       tailwind-merge:
-        specifier: ^3.3.1
+        specifier: ^3.4.0
         version: 3.4.0
       uploadthing:
         specifier: ^7.7.4
@@ -2933,6 +2933,7 @@ packages:
   next@15.5.7:
     resolution: {integrity: sha512-+t2/0jIJ48kUpGKkdlhgkv+zPTEOoXyr60qXe68eB/pl3CMJaLeIGjzp5D6Oqt25hCBiBTt8wEeeAzfJvUKnPQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
