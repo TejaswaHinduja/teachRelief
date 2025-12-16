@@ -143,7 +143,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-semibold mb-3">Instant Grading</h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    AI compares student work to the solution key and provides detailed feedback instantly.
+                    AI judges student work and provides detailed feedback instantly.
                   </p>
                 </div>
               </CometCard>
