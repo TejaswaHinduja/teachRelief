@@ -1,4 +1,4 @@
-
+import uvicorn
 import fitz
 import easyocr
 import requests
@@ -8,6 +8,7 @@ from PIL import Image
 import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+
 
 app = FastAPI(title="OCR API")
 
@@ -32,9 +33,14 @@ def extract_text(request: OCRRequest):
 
     pdf_document = fitz.open(pdf_path)
     all_text = []
-
+    lengthpdf=len(pdf_document)
+    if(lengthpdf > 10):
+        print("Upload a size smaller than 10")
+        return
+       
     for page_num in range(len(pdf_document)):
         page = pdf_document[page_num]
+        print(page)
         typed_text = page.get_text()
 
         # Convert page to high-res image
@@ -60,6 +66,6 @@ def extract_text(request: OCRRequest):
 
 
 if __name__ == "__main__":
-    import uvicorn
+        
     print("🚀 Starting OCR FastAPI server on http://localhost:8000 ...")
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
