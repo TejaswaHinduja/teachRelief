@@ -69,7 +69,7 @@ export default function TeacherDashboard() {
       <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
 
       <div className="space-y-4">
-        <div className="flex ">
+        <div className="flex-wrap gap-4">
           {rooms?.map((room) => {
             return (
               <Card className="flex col space-x-4 border-2 border-gray-200 hover:border-gray-300 transition-colors"
