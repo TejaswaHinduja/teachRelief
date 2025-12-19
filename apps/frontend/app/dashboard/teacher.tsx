@@ -78,8 +78,7 @@ export default function TeacherDashboard() {
                 key={room.id}
               >
                 <CardBody className="">
-                  {room.name}
-                  {room.code}
+                  {room.name} {room.code}
                 </CardBody>
               </Card>
             );
