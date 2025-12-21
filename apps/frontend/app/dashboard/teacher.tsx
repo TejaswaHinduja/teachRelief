@@ -23,7 +23,7 @@ export default function TeacherDashboard() {
   const createRoom = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:1000/api/createroom", {
+      const response = await fetch(`{BACKEND_URL}/api/createroom`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
