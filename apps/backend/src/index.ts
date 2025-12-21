@@ -12,7 +12,7 @@ const app=express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin:"http://localhost:3000",
+    origin:"https://teachrelief.tejaswahinduja.me",
     credentials:true
 }))
 app.use("/api", router)
@@ -21,4 +21,4 @@ app.use("/api", assignmentRoutes)
 app.use("/api", submissionRoutes)
 
 
-app.listen(1000)
+app.listen(3000,"0.0.0.0")
