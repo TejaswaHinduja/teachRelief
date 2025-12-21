@@ -7,6 +7,7 @@ import { useState,useEffect } from "react"
 import { useParams } from "next/navigation"
 
 export default function Submissions(){
+   const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
     const [loading,setLoading]=useState(false)
     const [submissions,setSubmissions]=useState<any[]>([])
     const params=useParams()
@@ -19,7 +20,7 @@ useEffect(()=>{
 const viewSubmissions= async () => {
     try{
       setLoading(true)
-      const response=await fetch("http://localhost:1000/api/view/submissions",{
+      const response=await fetch(`${BACKEND_URL}/api/view/submissions`,{
         method:"POST",
         credentials:"include",
         headers:{"content-type":"application/json"},

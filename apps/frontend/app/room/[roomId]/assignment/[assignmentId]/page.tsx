@@ -9,6 +9,7 @@ import { Card, CardBody } from "@heroui/card";
 
 
 export default function Assignment() {
+  const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
 
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
@@ -121,7 +122,7 @@ export default function Assignment() {
       return;
     }
     setSubmitting(true)
-    const response = await fetch("http://localhost:1000/api/submission", {
+    const response = await fetch(`${BACKEND_URL}/api/submission`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
