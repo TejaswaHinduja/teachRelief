@@ -2,6 +2,7 @@ import express,{Router} from "express";
 import { compareAi } from "../services/gpt";
 import { prisma } from "@repo/db";
 import { AuthRequest, protect } from "../middleware/protect";
+import { run } from "../services/mistral";
 
 const router:Router =express.Router();
 
@@ -22,7 +23,16 @@ router.post("/ocr", async (req, res) => {
     res.status(500).json({ error: "OCR service failed" });
   }
 });
-
+router.post("/mistralOcr",async(req:AuthRequest,res)=>{
+  try {
+    
+    await run(pdfUrl);               
+    res.json({ ok: true });    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "failed" });
+  }
+})
 router.post("/gradeAi",protect,async(req:AuthRequest,res)=>{
   const submissionId=req.body.submissionId ;
   const assignmentId=req.body.assignmentId ;

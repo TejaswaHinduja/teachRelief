@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/middleware/jwt.ts","./src/middleware/protect.ts","./src/routes/assignment.ts","./src/routes/authroutes.ts","./src/routes/graderoute.ts","./src/routes/submission.ts","./src/services/gpt.ts"],"version":"5.9.2"}
+{"root":["./src/index.ts","./src/middleware/jwt.ts","./src/middleware/protect.ts","./src/routes/assignment.ts","./src/routes/authroutes.ts","./src/routes/graderoute.ts","./src/routes/submission.ts","./src/services/gpt.ts","./src/services/mistral.ts"],"version":"5.9.2"}
