@@ -39,7 +39,7 @@ const viewSubmissions= async () => {
   }
 
 const grade= async (submissionId:string) =>{
-  const response=await fetch(`http://localhost:1000/api/gradeAi`,{
+  const response=await fetch(`${BACKEND_URL}/api/gradeAi`,{
     method:"POST",
     credentials:"include",
     headers:{"content-type":"application/json"},
@@ -47,7 +47,6 @@ const grade= async (submissionId:string) =>{
   })
 
 }
-
 return <>
 {submissions.map((submission)=>{
     return (

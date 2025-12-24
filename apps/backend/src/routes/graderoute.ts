@@ -6,7 +6,7 @@ import { run } from "../services/mistral";
 
 const router:Router =express.Router();
 
-router.post("/ocr", async (req, res) => {
+/*router.post("/ocr", async (req, res) => {
   const { pdfUrl } = req.body;
   if (!pdfUrl) return res.status(400).json({ error: "Missing pdfUrl" });
 
@@ -22,17 +22,24 @@ router.post("/ocr", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "OCR service failed" });
   }
-});
-router.post("/mistralOcr",async(req:AuthRequest,res)=>{
+});*/
+router.post("/ocr",async(req:AuthRequest,res)=>{
+  const {pdfUrl}=req.body;
+  if(!pdfUrl){
+    return res.status(400).json({error:"Missing pdfUrl"})
+  }
   try {
-    
-    await run(pdfUrl);               
-    res.json({ ok: true });    
+    const result=await run(pdfUrl);               
+    res.json({ 
+      success: true,
+      text:result
+     },);    
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "failed" });
   }
 })
+
 router.post("/gradeAi",protect,async(req:AuthRequest,res)=>{
   const submissionId=req.body.submissionId ;
   const assignmentId=req.body.assignmentId ;
