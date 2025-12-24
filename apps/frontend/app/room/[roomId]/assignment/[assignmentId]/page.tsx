@@ -9,7 +9,7 @@ import { Card, CardBody } from "@heroui/card";
 
 
 export default function Assignment() {
-  const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")

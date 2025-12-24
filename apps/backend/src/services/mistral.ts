@@ -14,7 +14,6 @@ export async function run(pdfUrl:string) {
       type: "document_url",
     },
   });
- 
   return result
 }
 
