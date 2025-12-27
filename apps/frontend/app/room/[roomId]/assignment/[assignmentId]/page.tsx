@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
 import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,11 @@ export default function Assignment() {
   const [pdfUrl, setPdfUrl] = useState("")
   const [ocrText, setOcrText] = useState("")
   const [sucess, setSuccess] = useState(false)
-  const [assignmemnt,setAssignment]=useState("")
+  const [assignment,setAssignment]=useState<{
+  title: string;
+  pdfUrl: string;
+} | null>(null);
+
   const [submitting, setSubmitting] = useState(false)
   const [loading, setLoading] = useState(false)    //const[assignmentId,setAssignmentId]=useState(false)
   const params = useParams();
@@ -138,6 +142,20 @@ export default function Assignment() {
       throw new Error(errorData.message || "Failed to create assignment");
     }
   };
+  useEffect(()=>{
+   fetchAssignments()
+  },[assignmentId])
+
+   const fetchAssignments= async ()=>{
+      const response=await fetch(`${BACKEND_URL}/api/assignment/${assignmentId}`,{
+        method:"GET",
+        credentials:"include"
+      })
+      const data =await response.json()
+      setAssignment(data.assignmentDetails)
+
+    }
+
 
   return <div className="justify-center items-center py-4 space-y-4 space-x-2 min-h-screen">
     <Card className="border-gray-200 border-4 w-70 translate-x-2 ">
@@ -155,7 +173,7 @@ export default function Assignment() {
     <iframe title="Assignment" src="https://ik.imagekit.io/tejaswahinduja/teachR_Gw3IGDXYj.pdf?updatedAt=1766822656304" className="w-200 h-500"></iframe>
   </div>
    } */}
-      <Card className="border-gray-300 border-2 w-45 translate-x-2" isPressable onPress={() => window.open("https://ik.imagekit.io/tejaswahinduja/teachR_Gw3IGDXYj.pdf?updatedAt=1766822656304", "_blank")}>
+      <Card className="border-gray-300 border-2 w-45 translate-x-2" isPressable onPress={() => window.open(assignment?.pdfUrl, "_blank")}>
             View Assignment 
       </Card>
     <div className="py-4">
