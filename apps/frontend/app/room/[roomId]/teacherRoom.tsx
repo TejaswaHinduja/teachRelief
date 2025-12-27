@@ -15,6 +15,7 @@ export default function Teacherroom(){
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
+  const [solutionpdfUrl, setAssignmentPdfUrl] = useState("");
   const [assignmentTitle, setAssignmentTitle] = useState(""); 
   const [creating, setCreating] = useState(false); 
   const [success, setSuccess] = useState("");
@@ -93,7 +94,54 @@ export default function Teacherroom(){
       setUploading(false);
     }
   };
+  const handleUploadAssignment = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
+    setUploading(true);
+    setError("");
+    setAssignmentPdfUrl("");
+
+    try {
+      const authParams = await authenticator();
+      const { signature, expire, token, publicKey } = authParams;
+
+      const uploadResponse = await upload({
+        expire,
+        token,
+        signature,
+        publicKey,
+        file,
+        fileName: file.name,
+        onProgress: (event) => {
+          const percent = (event.loaded / event.total) * 100;
+          console.log(`Upload progress: ${percent.toFixed(2)}%`);
+        },
+      });
+
+      if (uploadResponse.url) {
+        setAssignmentPdfUrl(uploadResponse.url);
+        console.log("Upload successful:", uploadResponse.url);
+      } else {
+        throw new Error("Upload succeeded but no URL was returned");
+      }
+    } catch (error) {
+      if (error instanceof ImageKitAbortError) {
+        setError(`Upload aborted: ${error.reason}`);
+      } else if (error instanceof ImageKitInvalidRequestError) {
+        setError(`Invalid request: ${error.message}`);
+      } else if (error instanceof ImageKitUploadNetworkError) {
+        setError(`Network error: ${error.message}`);
+      } else if (error instanceof ImageKitServerError) {
+        setError(`Server error: ${error.message}`);
+      } else {
+        setError("Upload failed. Please try again.");
+      }
+      console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
   const handleOCR = async () => {
     if (!pdfUrl) {
       setError("Please upload a PDF first");
@@ -155,9 +203,6 @@ export default function Teacherroom(){
       if (!roomResponse.ok) {
         throw new Error("Failed to fetch room details");
       }*/
-     console.log(roomId)
-     console.log(pdfUrl)
-     console.log(assignmentTitle)
 
       const response = await fetch(`${BACKEND_URL}/api/createAssignment`, {
         method: "POST",
@@ -240,14 +285,9 @@ export default function Teacherroom(){
           {/* PDF Upload Section */}
         <div className="space-y-2">
         <Label htmlFor="pdf-file">Upload Assignment </Label>
-        <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUpload}></Input>
+        <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUploadAssignment}></Input>
           <Label htmlFor="pdf-file">Upload Solution </Label>
-            <Input
-              id="pdf-file"
-              type="file"
-              accept=".pdf"
-              onChange={handleUpload}
-            disabled={uploading || loading}
+            <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUpload} disabled={uploading || loading}
           />
          </div>
 
