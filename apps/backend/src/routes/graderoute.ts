@@ -29,10 +29,10 @@ router.post("/ocr",async(req:AuthRequest,res)=>{
     return res.status(400).json({error:"Missing pdfUrl"})
   }
   try {
-    const result=await run(pdfUrl);               
+    const extractedText=await run(pdfUrl);               
     res.json({ 
       success: true,
-      text:result
+      text:extractedText
      },);    
   } catch (err) {
     console.error(err);
