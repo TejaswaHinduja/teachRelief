@@ -138,13 +138,18 @@ export default function Assignment() {
     }
   };
 
-  return <div className="justify-center  items-center py-4 space-y-4 space-x-2 min-h-screen">
+  return <div className="justify-center items-center py-4 space-y-4 space-x-2 min-h-screen">
     <Card className="border-gray-200 border-4 w-70 ">
       <CardBody>
         {assignmentId}
       </CardBody>
-
     </Card>
+    <Card  className="border-gray-200 border-4 w-70" isPressable onPress={()=>{
+      <iframe src="https://ik.imagekit.io/tejaswahinduja/teachR_Gw3IGDXYj.pdf?updatedAt=1766822656304" className="w-200 h-500"></iframe>
+    }}>
+      Click to view Assignment
+    </Card>
+    
     <div className="py-4">
       <Input type="file" accept=".pdf" onChange={handleUpload}></Input>
     </div>

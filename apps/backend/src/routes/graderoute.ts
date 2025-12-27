@@ -23,6 +23,7 @@ const router:Router =express.Router();
     res.status(500).json({ error: "OCR service failed" });
   }
 });*/
+
 router.post("/ocr",protect,async(req:AuthRequest,res)=>{
   const {pdfUrl}=req.body;
   if(!pdfUrl){
