@@ -16,6 +16,7 @@ export default function Assignment() {
   const [pdfUrl, setPdfUrl] = useState("")
   const [ocrText, setOcrText] = useState("")
   const [sucess, setSuccess] = useState(false)
+  const [assignmemnt,setAssignment]=useState("")
   const [submitting, setSubmitting] = useState(false)
   const [loading, setLoading] = useState(false)    //const[assignmentId,setAssignmentId]=useState(false)
   const params = useParams();
@@ -138,13 +139,25 @@ export default function Assignment() {
     }
   };
 
-  return <div className="justify-center  items-center py-4 space-y-4 space-x-2 min-h-screen">
-    <Card className="border-gray-200 border-4 w-70 ">
+  return <div className="justify-center items-center py-4 space-y-4 space-x-2 min-h-screen">
+    <Card className="border-gray-200 border-4 w-70 translate-x-2 ">
       <CardBody>
         {assignmentId}
       </CardBody>
-
     </Card>
+  {/*<Card  className="border-gray-200 border-4 w-70" isPressable onPress={()=>{
+    setOpen(!open)
+  }}>
+  Click to view Assignment
+  </Card>
+ {open && 
+ <div>
+    <iframe title="Assignment" src="https://ik.imagekit.io/tejaswahinduja/teachR_Gw3IGDXYj.pdf?updatedAt=1766822656304" className="w-200 h-500"></iframe>
+  </div>
+   } */}
+      <Card className="border-gray-300 border-2 w-45 translate-x-2" isPressable onPress={() => window.open("https://ik.imagekit.io/tejaswahinduja/teachR_Gw3IGDXYj.pdf?updatedAt=1766822656304", "_blank")}>
+            View Assignment 
+      </Card>
     <div className="py-4">
       <Input type="file" accept=".pdf" onChange={handleUpload}></Input>
     </div>

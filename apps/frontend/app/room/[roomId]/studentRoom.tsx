@@ -1,7 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardBody } from "@heroui/card";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -11,7 +9,6 @@ interface Assignment {
     title: string;
     pdfUrl: string;
 }
-
 
 export default function StudentRoom() {
     const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
@@ -35,7 +32,6 @@ export default function StudentRoom() {
             })
             const data = await response.json();
             console.log("API Response:", data)
-            // The API returns {assignments: [...]}
             if (data.assignments) {
                 setAssignments(data.assignments)
                 console.log("Assignments:", data.assignments)
@@ -62,6 +58,8 @@ export default function StudentRoom() {
                 <p>No assignments found for this room.</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    
+
                     {assignments.map((assignment) => (
                         <Card
                             key={assignment.id}
