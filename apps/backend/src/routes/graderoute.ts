@@ -2,10 +2,11 @@ import express,{Router} from "express";
 import { compareAi } from "../services/gpt";
 import { prisma } from "@repo/db";
 import { AuthRequest, protect } from "../middleware/protect";
+import { run } from "../services/mistral";
 
 const router:Router =express.Router();
 
-router.post("/ocr", async (req, res) => {
+/*router.post("/ocr", async (req, res) => {
   const { pdfUrl } = req.body;
   if (!pdfUrl) return res.status(400).json({ error: "Missing pdfUrl" });
 
@@ -21,7 +22,23 @@ router.post("/ocr", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "OCR service failed" });
   }
-});
+});*/
+router.post("/ocr",protect,async(req:AuthRequest,res)=>{
+  const {pdfUrl}=req.body;
+  if(!pdfUrl){
+    return res.status(400).json({error:"Missing pdfUrl"})
+  }
+  try {
+    const extractedText=await run(pdfUrl);               
+    res.json({ 
+      success: true,
+      text:extractedText
+     },);    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "failed" });
+  }
+})
 
 router.post("/gradeAi",protect,async(req:AuthRequest,res)=>{
   const submissionId=req.body.submissionId ;

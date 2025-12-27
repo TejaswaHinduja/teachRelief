@@ -5,7 +5,10 @@ import { Label } from "@/components/ui/label";
 
 import { useRouter } from "next/navigation";
 
+
+
 export default function StudentDashboard() {
+  const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
   const router = useRouter();
   const [roomCode, setRoomCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,7 +23,7 @@ export default function StudentDashboard() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:1000/api/joinroom", {
+      const response = await fetch(`${BACKEND_URL}/api/joinroom`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

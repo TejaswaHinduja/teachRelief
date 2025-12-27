@@ -9,15 +9,12 @@ import { Controller, useForm } from "react-hook-form";
 import Link from "next/link";
 
 export default function SignPage() {
+  const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL 
   const { type } = useParams();
   const router = useRouter();
 
   if (typeof type !== "string") {
-    // We can't return here because of hooks constraints, but we can't use 'type' safely either.
-    // However, hooks must be unconditional.
   }
-
-  // We'll proceed assuming it's valid for the hook setup, then check before render/effects.
   const isValidType = typeof type === "string" && ["login", "signup"].includes(type);
   const signup = typeof type === "string" && type === "signup";
 
@@ -38,7 +35,7 @@ export default function SignPage() {
   async function onSubmit(values: formValues) {
     const endpoint = signup ? "signup" : "login";
 
-    const res = await fetch(`http://localhost:1000/api/${endpoint}`, {
+    const res = await fetch(`${BACKEND_URL}/api/${endpoint}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -78,13 +75,11 @@ export default function SignPage() {
           {...register("email", { required: true })}
         />
 
-
         <Input
           type="password"
           placeholder="Enter password"
           {...register("password", { required: true })}
         />
-
         {signup && (
           <Controller
             name="role"

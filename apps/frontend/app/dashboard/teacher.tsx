@@ -8,7 +8,9 @@ import { useRouter } from "next/navigation";
 
 
 
+
 export default function TeacherDashboard() {
+  const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
   const [rooms, setRooms] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -21,7 +23,7 @@ export default function TeacherDashboard() {
   const createRoom = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:1000/api/createroom", {
+      const response = await fetch(`${BACKEND_URL}/api/createroom`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -47,7 +49,7 @@ export default function TeacherDashboard() {
     const fetchRooms = async () => {
       try {
         setLoading(true)
-        const response = await fetch("http://localhost:1000/api/myrooms", {
+        const response = await fetch(`${BACKEND_URL}/api/myrooms`, {
           method: "GET",
           credentials: "include"
         })

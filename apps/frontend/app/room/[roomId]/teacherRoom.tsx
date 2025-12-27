@@ -9,6 +9,7 @@ import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, I
 import { Card,CardBody } from "@heroui/card";
 
 export default function Teacherroom(){
+  const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
   const [ocrText, setOcrText] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -103,7 +104,7 @@ export default function Teacherroom(){
     setOcrText("");
 
     try {
-      const response = await fetch("http://localhost:1000/api/ocr", {
+      const response = await fetch(`${BACKEND_URL}/api/ocr`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pdfUrl }),
@@ -158,7 +159,7 @@ export default function Teacherroom(){
      console.log(pdfUrl)
      console.log(assignmentTitle)
 
-      const response = await fetch("http://localhost:1000/api/createAssignment", {
+      const response = await fetch(`${BACKEND_URL}/api/createAssignment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +198,7 @@ export default function Teacherroom(){
   useEffect(()=>{
     const viewAssignments= async() => {
     try{
-      const response=await fetch(`http://localhost:1000/api/teacher/assignment/${roomId}`,{
+      const response=await fetch(`${BACKEND_URL}/api/teacher/assignment/${roomId}`,{
         method:"GET",
         credentials:"include"
       })

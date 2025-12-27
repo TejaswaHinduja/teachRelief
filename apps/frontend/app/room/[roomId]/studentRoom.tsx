@@ -14,6 +14,7 @@ interface Assignment {
 
 
 export default function StudentRoom() {
+    const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
     const [assignments, setAssignments] = useState<Assignment[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -28,7 +29,7 @@ export default function StudentRoom() {
     const fetchAssignments = async () => {
         try {
             setLoading(true)
-            const response = await fetch(`http://localhost:1000/api/assignment/${roomId}`, {
+            const response = await fetch(`${BACKEND_URL}/api/assignment/${roomId}`, {
                 method: "GET",
                 credentials: "include"
             })
