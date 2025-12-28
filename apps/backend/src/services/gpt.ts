@@ -15,12 +15,14 @@ ${solutionText}
 Student's Submission:
 ${studentsText}
 
+IMPORTANT: In your feedback, do NOT use LaTeX, math symbols with backslashes, or special characters. Use plain text only (e.g., write "sqrt(npq)" instead of "$\\sqrt{npq}$", write "lambda" instead of "$\\lambda$").
+
 Respond with ONLY a JSON object (no markdown, no code blocks) in this exact format:
-{"grade": "A/B/C/D/F or percentage", "feedback": "your feedback here"}`
+{"grade": "A/B/C/D/F or percentage", "feedback": "your feedback here in plain text"}`
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents:prompt
+    contents: prompt
   });
 
   //@ts-ignore

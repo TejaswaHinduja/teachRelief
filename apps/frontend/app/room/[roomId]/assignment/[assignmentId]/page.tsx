@@ -104,6 +104,7 @@ export default function Assignment() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/ocr`, {
         method: "POST",
+        credentials:"include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pdfUrl }),
       });

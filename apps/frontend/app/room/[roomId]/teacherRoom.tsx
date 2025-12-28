@@ -16,14 +16,14 @@ export default function Teacherroom(){
   const [error, setError] = useState("");
   const [solutionpdfUrl, setPdfUrl] = useState("");
   const [assignmentpdfUrl, setAssignmentPdfUrl] = useState("");
-  const [assignmentTitle, setAssignmentTitle] = useState(""); 
-  const [creating, setCreating] = useState(false); 
+  const [assignmentTitle, setAssignmentTitle] = useState("");
+  const [creating, setCreating] = useState(false);
   const [success, setSuccess] = useState("");
   const [submissions,setSubmissions]=useState<any[]>([])
   const [assignments,setAssignments]=useState<any[]>([])
 
-  const params = useParams(); 
-  const roomId = params.roomId as string; 
+  const params = useParams();
+  const roomId = params.roomId as string;
   const assignmentId=params.assignmentdId as string
 
   const router = useRouter();
@@ -153,8 +153,9 @@ export default function Teacherroom(){
     try {
       const response = await fetch(`${BACKEND_URL}/api/ocr`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ solutionpdfUrl }),
+        body: JSON.stringify({ pdfUrl: solutionpdfUrl }),
       });
 
       if (!response.ok) {
@@ -208,7 +209,7 @@ export default function Teacherroom(){
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", 
+        credentials: "include",
         body: JSON.stringify({
           title: assignmentTitle,
           roomId: roomId,
@@ -221,7 +222,6 @@ export default function Teacherroom(){
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to create assignment");
       }
-
       const data = await response.json();
       setSuccess(`Assignment "${assignmentTitle}" created successfully!`);
 
@@ -238,36 +238,36 @@ export default function Teacherroom(){
       setCreating(false);
     }
   };
- 
-  useEffect(()=>{
-    const viewAssignments= async() => {
-    try{
-      const response=await fetch(`${BACKEND_URL}/api/teacher/assignment/${roomId}`,{
-        method:"GET",
-        credentials:"include"
-      })
-      const data = await response.json();
-      setAssignments(data.getAssignments);
-    }
-    catch(e){
+
+  useEffect(() => {
+    const viewAssignments = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/teacher/assignment/${roomId}`, {
+          method: "GET",
+          credentials: "include"
+        })
+        const data = await response.json();
+        setAssignments(data.getAssignments);
+      }
+      catch (e) {
         console.log(e)
         setError("failed to fetch assignments")
+      }
+      finally {
+        setLoading(false)
+      }
     }
-    finally{
-      setLoading(false)
+    if (roomId) {
+      viewAssignments()
     }
-  }
-  if(roomId){
-  viewAssignments()
-}
-  },[roomId])
-  
+  }, [roomId])
+
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <Card>
         <CardBody>
           <h2 className="text-xl font-semibold mb-4">Create New Assignment</h2>
-          
+
           {/* Assignment Title Input */}
           <div className="space-y-2 mb-4">
             <Label htmlFor="assignment-title">Assignment Title</Label>
@@ -282,13 +282,13 @@ export default function Teacherroom(){
           </div>
 
           {/* PDF Upload Section */}
-        <div className="space-y-2">
-        <Label htmlFor="pdf-file">Upload Assignment </Label>
-        <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUploadAssignment}></Input>
-          <Label htmlFor="pdf-file">Upload Solution </Label>
+          <div className="space-y-2">
+            <Label htmlFor="pdf-file">Upload Assignment </Label>
+            <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUploadAssignment}></Input>
+            <Label htmlFor="pdf-file">Upload Solution </Label>
             <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUpload} disabled={uploading || loading}
-          />
-         </div>
+            />
+          </div>
 
           {/* Action Buttons */}
           <div className="flex space-y-2 space-x-1 gap-3 mb-4">
@@ -334,15 +334,15 @@ export default function Teacherroom(){
       {/*Assignments Section*/}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Your Assignments</h2>
-        
+
         {loading && <p>Loading assignments...</p>}
-        
+
         {!loading && assignments.length === 0 && (
           <p className="text-gray-500">No assignments yet. Create one above!</p>
         )}
-        
+
         {assignments.map((assignment) => (
-          <Card isPressable onPress={()=>{router.push(`/room/${roomId}/assignment/${assignment.id}/submissions`)}}key={assignment.id} className="border-2 border-gray-200">
+          <Card isPressable onPress={() => { router.push(`/room/${roomId}/assignment/${assignment.id}/submissions`) }} key={assignment.id} className="border-2 border-gray-200">
             <CardBody>
               <h3 className="font-semibold">{assignment.title}</h3>
               <p className="text-sm text-gray-500">
@@ -353,4 +353,5 @@ export default function Teacherroom(){
         ))}
       </div>
     </div>
-)}
+  )
+}
