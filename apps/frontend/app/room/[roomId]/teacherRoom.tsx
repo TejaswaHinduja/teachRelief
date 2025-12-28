@@ -14,8 +14,8 @@ export default function Teacherroom(){
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [solutionpdfUrl, setAssignmentPdfUrl] = useState("");
+  const [solutionpdfUrl, setPdfUrl] = useState("");
+  const [assignmentpdfUrl, setAssignmentPdfUrl] = useState("");
   const [assignmentTitle, setAssignmentTitle] = useState(""); 
   const [creating, setCreating] = useState(false); 
   const [success, setSuccess] = useState("");
@@ -28,7 +28,7 @@ export default function Teacherroom(){
 
   const router = useRouter();
 
-   const authenticator = async () => {
+  const authenticator = async () => {
     try {
       const response = await fetch("/api/upload-auth");
       if (!response.ok) {
@@ -45,7 +45,6 @@ export default function Teacherroom(){
       throw new Error("Authentication request failed");
     }
   };
-
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -143,7 +142,7 @@ export default function Teacherroom(){
     }
   };
   const handleOCR = async () => {
-    if (!pdfUrl) {
+    if (!solutionpdfUrl) {
       setError("Please upload a PDF first");
       return;
     }
@@ -155,7 +154,7 @@ export default function Teacherroom(){
       const response = await fetch(`${BACKEND_URL}/api/ocr`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pdfUrl }),
+        body: JSON.stringify({ solutionpdfUrl }),
       });
 
       if (!response.ok) {
@@ -178,7 +177,7 @@ export default function Teacherroom(){
       setError("Please enter an assignment title");
       return;
     }
-    if (!pdfUrl) {
+    if (!assignmentpdfUrl) {
       setError("Please upload a PDF first");
       return;
     }
@@ -213,7 +212,7 @@ export default function Teacherroom(){
         body: JSON.stringify({
           title: assignmentTitle,
           roomId: roomId,
-          pdfUrl: pdfUrl,
+          pdfUrl: assignmentpdfUrl,
           solutionText: ocrText,
         }),
       });
@@ -295,7 +294,7 @@ export default function Teacherroom(){
           <div className="flex space-y-2 space-x-1 gap-3 mb-4">
             <Button
               onClick={handleOCR}
-              disabled={loading || uploading || !pdfUrl || creating}
+              disabled={loading || uploading || !assignmentpdfUrl || creating}
               variant="outline"
             >
               {loading ? "Extracting OCR..." : "Run OCR on PDF"}
@@ -303,7 +302,7 @@ export default function Teacherroom(){
 
             <Button
               onClick={createAssignment}
-              disabled={creating || !assignmentTitle || !pdfUrl || !ocrText}
+              disabled={creating || !assignmentTitle || !assignmentpdfUrl || !ocrText}
             >
               {creating ? "Creating..." : "Create Assignment"}
             </Button>
