@@ -7,6 +7,7 @@ import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern"
 import { cn } from "@/lib/utils";
 import { Highlighter } from "@/components/ui/highlighter"
 import Hat from "@/icons/Hat"
+import { TwitterIcon } from "@/components/ui/twitter";
 
 import { CometCard } from "@/components/ui/comet-card";
 
@@ -54,10 +55,10 @@ export default function Home() {
               How it works
             </Link>
             <Link
-              href="#pricing"
+              href="#connect"
               className="text-gray-700 dark:text-gray-200 hover:text-primary transition duration-300"
             >
-              Pricing
+              Connect
             </Link>
           </nav>
 
@@ -151,8 +152,19 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section id="pricing" className="min-h-screen flex items-center justify-center px-6">
+      <section id="conenct" className="min-h-screen flex items-center justify-center px-6">
         <h2 className="text-2xl font-medium">Connect</h2>
+        <div>
+          <Link 
+          href="https://x.com/Tej_Codes"
+          target="_blank">
+          <TwitterIcon/>
+          </Link>
+          <Link
+          href="https://www.linkedin.com/in/tejaswa-hinduja-b585b6323/"
+          target="_blank">
+          </Link>
+        </div>
         
       </section>
 
