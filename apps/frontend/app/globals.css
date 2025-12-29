@@ -130,3 +130,7 @@
   background-size: 300% 300%;
   animation: gradientShift 15s ease infinite;
 }
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}

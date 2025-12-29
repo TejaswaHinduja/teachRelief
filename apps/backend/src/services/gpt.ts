@@ -27,7 +27,6 @@ Respond with ONLY a JSON object (no markdown, no code blocks) in this exact form
 
   //@ts-ignore
   let textResponse: string = response.text || "";
-
   // Strip markdown code blocks if present (```json ... ```)
   textResponse = textResponse.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
 

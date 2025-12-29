@@ -152,7 +152,8 @@ export default function Home() {
         </div>
       </section>
       <section id="pricing" className="min-h-screen flex items-center justify-center px-6">
-        <h2 className="text-2xl font-medium">Pricing</h2>
+        <h2 className="text-2xl font-medium">Connect</h2>
+        
       </section>
 
     </div>

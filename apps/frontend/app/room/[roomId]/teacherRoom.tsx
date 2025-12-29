@@ -1,15 +1,15 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import {Label} from "@/components/ui/label"
+import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react";
-import {useRouter,useParams} from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
-import { Card,CardBody } from "@heroui/card";
+import { Card, CardBody } from "@heroui/card";
 
-export default function Teacherroom(){
-  const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
+export default function Teacherroom() {
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
   const [ocrText, setOcrText] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -19,12 +19,12 @@ export default function Teacherroom(){
   const [assignmentTitle, setAssignmentTitle] = useState("");
   const [creating, setCreating] = useState(false);
   const [success, setSuccess] = useState("");
-  const [submissions,setSubmissions]=useState<any[]>([])
-  const [assignments,setAssignments]=useState<any[]>([])
+  const [submissions, setSubmissions] = useState<any[]>([])
+  const [assignments, setAssignments] = useState<any[]>([])
 
   const params = useParams();
   const roomId = params.roomId as string;
-  const assignmentId=params.assignmentdId as string
+  const assignmentId = params.assignmentdId as string
 
   const router = useRouter();
 
@@ -266,8 +266,12 @@ export default function Teacherroom(){
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <Card>
         <CardBody>
-          <h2 className="text-xl font-semibold mb-4">Create New Assignment</h2>
-
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Create New Assignment</h2>
+            <Button className="cursor-pointer" variant="outline" onClick={() => { router.push("/dashboard") }}>
+              Go back to Dashboard
+            </Button>
+          </div>
           {/* Assignment Title Input */}
           <div className="space-y-2 mb-4">
             <Label htmlFor="assignment-title">Assignment Title</Label>
@@ -291,8 +295,9 @@ export default function Teacherroom(){
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-y-2 space-x-1 gap-3 mb-4">
+          <div className="flex space-y-2 space-x-1 gap-3 mt-6 mb-4">
             <Button
+              className="cursor-pointer"
               onClick={handleOCR}
               disabled={loading || uploading || !assignmentpdfUrl || creating}
               variant="outline"
@@ -301,6 +306,7 @@ export default function Teacherroom(){
             </Button>
 
             <Button
+              className="cursor-pointer"
               onClick={createAssignment}
               disabled={creating || !assignmentTitle || !assignmentpdfUrl || !ocrText}
             >
@@ -332,26 +338,30 @@ export default function Teacherroom(){
         </CardBody>
       </Card>
       {/*Assignments Section*/}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Your Assignments</h2>
+      <Card>
+        <CardBody>
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Your Assignments</h2>
 
-        {loading && <p>Loading assignments...</p>}
+            {loading && <p>Loading assignments...</p>}
 
-        {!loading && assignments.length === 0 && (
-          <p className="text-gray-500">No assignments yet. Create one above!</p>
-        )}
+            {!loading && assignments.length === 0 && (
+              <p className="text-gray-500">No assignments yet. Create one above!</p>
+            )}
 
-        {assignments.map((assignment) => (
-          <Card isPressable onPress={() => { router.push(`/room/${roomId}/assignment/${assignment.id}/submissions`) }} key={assignment.id} className="border-2 border-gray-200">
-            <CardBody>
-              <h3 className="font-semibold">{assignment.title}</h3>
-              <p className="text-sm text-gray-500">
-                Created: {new Date(assignment.createdAt).toLocaleDateString()}
-              </p>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
+            {assignments.map((assignment) => (
+              <Card isPressable onPress={() => { router.push(`/room/${roomId}/assignment/${assignment.id}/submissions`) }} key={assignment.id} className="border-2 border-gray-200">
+                <CardBody>
+                  <h3 className="font-semibold">{assignment.title}</h3>
+                  <p className="text-sm text-gray-500">
+                    Created: {new Date(assignment.createdAt).toLocaleDateString()}
+                  </p>
+                </CardBody>
+              </Card>
+            ))}
+          </div>
+        </CardBody>
+      </Card>
     </div>
   )
 }
