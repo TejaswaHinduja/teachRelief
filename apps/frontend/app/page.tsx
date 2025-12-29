@@ -10,6 +10,7 @@ import Hat from "@/icons/Hat"
 import { TwitterIcon } from "@/components/ui/twitter";
 
 import { CometCard } from "@/components/ui/comet-card";
+import { LinkedInIcon } from "@/components/ui/linkedin";
 
 export default function Home() {
   const router = useRouter();
@@ -163,6 +164,7 @@ export default function Home() {
           <Link
           href="https://www.linkedin.com/in/tejaswa-hinduja-b585b6323/"
           target="_blank">
+          <LinkedInIcon/>
           </Link>
         </div>
         

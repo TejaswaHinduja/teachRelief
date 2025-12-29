@@ -3,6 +3,7 @@ import { compareAi } from "../services/gpt";
 import { prisma } from "@repo/db";
 import { AuthRequest, protect } from "../middleware/protect";
 import { run } from "../services/mistral";
+import { ocrLimiter } from "../middleware/ratelimit";
 
 const router:Router =express.Router();
 
@@ -24,7 +25,7 @@ const router:Router =express.Router();
   }
 });*/
 
-router.post("/ocr",protect,async(req:AuthRequest,res)=>{
+router.post("/ocr",ocrLimiter,protect,async(req:AuthRequest,res)=>{
   const {pdfUrl}=req.body;
   if(!pdfUrl){
     return res.status(400).json({error:"Missing pdfUrl"})
