@@ -4,6 +4,7 @@ import { prisma } from "@repo/db";
 import { AuthRequest, protect } from "../middleware/protect";
 import { run } from "../services/mistral";
 import { ocrLimiter } from "../middleware/ratelimit";
+import { validatePdf } from "../utils/pdfValidator";
 
 const router:Router =express.Router();
 
@@ -25,65 +26,73 @@ const router:Router =express.Router();
   }
 });*/
 
-router.post("/ocr",ocrLimiter,protect,async(req:AuthRequest,res)=>{
-  const {pdfUrl}=req.body;
-  if(!pdfUrl){
-    return res.status(400).json({error:"Missing pdfUrl"})
+router.post("/ocr", ocrLimiter, protect, async (req: AuthRequest, res) => {
+  const { pdfUrl } = req.body;
+  if (!pdfUrl) {
+    return res.status(400).json({ error: "Missing pdfUrl" })
   }
+
+  // Validate PDF before running expensive OCR
+  const validation = await validatePdf(pdfUrl);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
+  }
+
   try {
-    const extractedText=await run(pdfUrl);               
-    res.json({ 
+    const extractedText = await run(pdfUrl);
+    res.json({
       success: true,
-      text:extractedText
-     },);    
+      text: extractedText,
+      pageCount: validation.pageCount
+    },);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "failed" });
   }
 })
 
-router.post("/gradeAi",protect,async(req:AuthRequest,res)=>{
-  const submissionId=req.body.submissionId ;
-  const assignmentId=req.body.assignmentId ;
-  if(!assignmentId||!submissionId){
-    return res.json({message:"assignmend doesnt exist"})
-  }
-  
-  const studentsText=await prisma.submission.findUnique({
-    where:{
-      id:submissionId
-    },
-    select:{
-      extractedText:true
-    }
-  })
-  const teachersSolution=await prisma.assignment.findUnique({
-    where:{
-      id:assignmentId
-    },
-    select:{
-      solutionText:true
-    }
-  })
-  if(!studentsText||!teachersSolution){
-    return res.status(403).json({message:"rubrics not provided yet"})
+router.post("/gradeAi", protect, async (req: AuthRequest, res) => {
+  const submissionId = req.body.submissionId;
+  const assignmentId = req.body.assignmentId;
+  if (!assignmentId || !submissionId) {
+    return res.json({ message: "assignmend doesnt exist" })
   }
 
-  const {grade,feedback}=await compareAi(
+  const studentsText = await prisma.submission.findUnique({
+    where: {
+      id: submissionId
+    },
+    select: {
+      extractedText: true
+    }
+  })
+  const teachersSolution = await prisma.assignment.findUnique({
+    where: {
+      id: assignmentId
+    },
+    select: {
+      solutionText: true
+    }
+  })
+  if (!studentsText || !teachersSolution) {
+    return res.status(403).json({ message: "rubrics not provided yet" })
+  }
+
+  const { grade, feedback } = await compareAi(
     studentsText.extractedText,
     teachersSolution.solutionText
   )
 
-  const savegrades=await prisma.submission.update({
+  const savegrades = await prisma.submission.update({
     where:
-    {id:submissionId},
-    data:{
+      { id: submissionId },
+    data: {
       grade,
       feedback,
-      gradedAt:new Date()
+      gradedAt: new Date()
     }
   })
-  return res.json({savegrades})
+  return res.json({ savegrades })
 
 })
 
