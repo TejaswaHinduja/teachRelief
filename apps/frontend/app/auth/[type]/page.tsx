@@ -1,10 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useParams, notFound, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { loginSchema, signupSchema, type LoginFormData, type SignupFormData } from "@/lib/validations/auth";
 
 export default function SignPage() {
   const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL 
@@ -16,21 +19,28 @@ export default function SignPage() {
   const isValidType = typeof type === "string" && ["login", "signup"].includes(type);
   const signup = typeof type === "string" && type === "signup";
 
-  type formValues = {
-    email: string;
-    name?: string;
-    password: string;
-    role: "STUDENT" | "TEACHER"
-  };
-
-  const { register, handleSubmit, control } = useForm<formValues>({
-    defaultValues: { name: "", email: "", password: "", role: "STUDENT" },
-  });
-
   if (typeof type !== "string") return null;
   if (!isValidType) notFound();
 
-  async function onSubmit(values: formValues) {
+  // Use the appropriate schema based on the form type
+  const schema = signup ? signupSchema : loginSchema;
+  
+  // Create separate form hooks for better type safety
+  const loginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
+
+  const signupForm = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { name: "", email: "", password: "", role: "STUDENT" },
+  });
+
+  // Use the appropriate form based on type
+  const form = signup ? signupForm : loginForm;
+  const { register, handleSubmit, control, formState: { errors } } = form;
+
+  async function onSubmit(values: SignupFormData | LoginFormData) {
     const endpoint = signup ? "signup" : "login";
 
     const res = await fetch(`${BACKEND_URL}/api/${endpoint}`, {
@@ -68,38 +78,84 @@ export default function SignPage() {
 
 
       <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-4 py-6">
-        <Input
-          placeholder="Enter your email"
-          {...register("email", { required: true })}
-        />
-
-        <Input
-          type="password"
-          placeholder="Enter password"
-          {...register("password", { required: true })}
-        />
-        {signup && (
-          <Controller
-            name="role"
-            control={control}
-            render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="STUDENT">Student</SelectItem>
-                  <SelectItem value="TEACHER">Teacher</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
+        <div className="flex flex-col gap-2">
+        <div className="hidden-field" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+              <input
+                id="website"
+                type="text"
+                {...signupForm.register("website")} 
+                tabIndex={-1}            // prevents keyboard focus
+                autoComplete="off"       
+              />
+            </div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            {...(signup ? signupForm.register("email") : loginForm.register("email"))}
+            className={errors.email ? "border-red-500" : ""}
           />
+          {errors.email && (
+            <p className="text-sm text-red-500">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="Enter password"
+            {...(signup ? signupForm.register("password") : loginForm.register("password"))}
+            className={errors.password ? "border-red-500" : ""}
+          />
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password.message}</p>
+          )}
+        </div>
+
+        {signup && (
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="role">Role</Label>
+            <Controller
+              name="role"
+              control={signupForm.control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className={signupForm.formState.errors.role ? "border-red-500" : ""}>
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="STUDENT">Student</SelectItem>
+                      <SelectItem value="TEACHER">Teacher</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {signupForm.formState.errors.role && (
+                    <p className="text-sm text-red-500">{signupForm.formState.errors.role.message}</p>
+                  )}
+                </>
+              )}
+            />
+          </div>
         )}
 
-        {signup && <Input
-          placeholder="Enter your name"
-          {...register("name")}
-        />}
+        {signup && (
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              placeholder="Enter your name"
+              {...signupForm.register("name")}
+              className={signupForm.formState.errors.name ? "border-red-500" : ""}
+            />
+            {signupForm.formState.errors.name && (
+              <p className="text-sm text-red-500">{signupForm.formState.errors.name.message}</p>
+            )}
+          </div>
+        )}
 
         <Button className="w-full mt-2">{signup ? "Sign Up" : "Sign In"}</Button>
       </form>
