@@ -20,7 +20,7 @@ export async function validatePdf(pdfUrl: string): Promise<{ valid: boolean; err
         }
 
         // Parse PDF to get page count
-        const arrayBuffer = await response.arrayBuffer();
+        /*const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
         const pdfData = await pdfParse(buffer);
@@ -32,9 +32,9 @@ export async function validatePdf(pdfUrl: string): Promise<{ valid: boolean; err
                 error: `Too many pages (${pageCount}). Maximum is ${MAX_PAGE_COUNT} pages`,
                 pageCount
             };
-        }
+        }*/
 
-        return { valid: true, pageCount };
+        return { valid: true};
     } catch (err) {
         console.error("PDF validation error:", err);
         return { valid: false, error: "Failed to validate PDF" };
