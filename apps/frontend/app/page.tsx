@@ -25,11 +25,11 @@ export default function Home() {
         repeatdelay={1}
         className={cn(
           "fixed inset-0 -z-10",
-          "[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]",
+          "[mask-[radial-gradient(500px_circle_at_center,white,transparent)]",
           "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
         )} />
       {/*<div className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-b  from-rose-100/40  via-rose-200/30  to-rose-400/20" />*/}
-      <div className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-b  from-sky-200/40  via-blue-200/30  to-blue-300/20" />
+      <div className="fixed inset-0 -z-10 pointer-events-none bg-linear-to-b  from-sky-200/40  via-blue-200/30  to-blue-300/20" />
 
       {/* NAVBAR */}
       <header className="w-full absolute top-0 left-0 z-40 bg-transparent">
