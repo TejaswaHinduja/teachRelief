@@ -153,21 +153,72 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section id="conenct" className="min-h-screen flex items-center justify-center px-6">
-        <h2 className="text-2xl font-medium">Connect</h2>
-        <div>
-          <Link 
-          href="https://x.com/Tej_Codes"
-          target="_blank">
-          <TwitterIcon/>
-          </Link>
-          <Link
-          href="https://www.linkedin.com/in/tejaswa-hinduja-b585b6323/"
-          target="_blank">
-          <LinkedInIcon/>
-          </Link>
+
+      {/* Demo Video Section - Uncomment when you have a video ready */}
+      {/* 
+      <section id="demo" className="min-h-screen flex items-center justify-center px-6 py-20 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900">
+        <div className="max-w-5xl w-full">
+          <div className="text-center mb-12">
+            <Highlighter action="highlight" color="#87CEEB">
+              <h2 className="text-4xl font-bold mb-4">See TeachRelief In Action</h2>
+            </Highlighter>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              Watch how teachers automate grading and students get instant feedback
+            </p>
+          </div>
+          
+          <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl bg-black">
+            <div className="relative" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                className="absolute top-0 left-0 w-full h-full"
+                src="https://www.youtube.com/embed/YOUR_VIDEO_ID?rel=0&modestbranding=1"
+                title="TeachRelief Demo Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+              />
+            </div>
+          </div>
+          
+          <div className="text-center mt-8">
+            <Button 
+              size="lg" 
+              onClick={() => router.push("/auth/signup")}
+              className="text-lg px-8 py-6"
+            >
+              Try It Free
+            </Button>
+          </div>
         </div>
-        
+      </section>
+      */}
+
+      <section id="connect" className="min-h-screen flex items-center justify-center px-6">
+        <div className="flex flex-col items-center justify-center gap-6">
+          <Highlighter action="highlight" color="#87CEEB">
+            <h2 className="text-4xl font-bold mb-8">Connect</h2>
+          </Highlighter>
+          <div className="flex items-center gap-6">
+            <Link 
+              href="https://x.com/Tej_Codes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:scale-110"
+              aria-label="Follow on Twitter/X"
+            >
+              <TwitterIcon className="w-6 h-6"/>
+            </Link>
+            <Link
+              href="https://www.linkedin.com/in/tejaswa-hinduja-b585b6323/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300 hover:scale-110"
+              aria-label="Connect on LinkedIn"
+            >
+              <LinkedInIcon className="w-6 h-6"/>
+            </Link>
+          </div>
+        </div>
       </section>
 
     </div>
