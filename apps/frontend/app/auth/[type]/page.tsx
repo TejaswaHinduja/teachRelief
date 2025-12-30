@@ -14,18 +14,8 @@ export default function SignPage() {
   const { type } = useParams();
   const router = useRouter();
 
-  if (typeof type !== "string") {
-  }
-  const isValidType = typeof type === "string" && ["login", "signup"].includes(type);
-  const signup = typeof type === "string" && type === "signup";
-
-  if (typeof type !== "string") return null;
-  if (!isValidType) notFound();
-
-  // Use the appropriate schema based on the form type
-  const schema = signup ? signupSchema : loginSchema;
-  
   // Create separate form hooks for better type safety
+  // Hooks must be called at the top level, before any conditional returns
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
@@ -35,6 +25,17 @@ export default function SignPage() {
     resolver: zodResolver(signupSchema),
     defaultValues: { name: "", email: "", password: "", role: "STUDENT" },
   });
+
+  // Validation checks after hooks
+  if (typeof type !== "string") return null;
+  
+  const isValidType = typeof type === "string" && ["login", "signup"].includes(type);
+  if (!isValidType) notFound();
+  
+  const signup = typeof type === "string" && type === "signup";
+
+  // Use the appropriate schema based on the form type
+  const schema = signup ? signupSchema : loginSchema;
 
   // Use the appropriate form based on type
   const form = signup ? signupForm : loginForm;
