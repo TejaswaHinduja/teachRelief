@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroui/card": "^2.2.25",
+    "@hookform/resolvers": "^5.2.2",
     "@imagekit/next": "^2.1.3",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.6",
@@ -27,7 +28,8 @@
     "react-hook-form": "^7.66.0",
     "rough-notation": "^0.5.1",
     "tailwind-merge": "^3.4.0",
-    "uploadthing": "^7.7.4"
+    "uploadthing": "^7.7.4",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

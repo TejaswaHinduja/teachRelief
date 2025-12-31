@@ -32,72 +32,71 @@ router.post("/createAssignment", protect, async (req: AuthRequest, res) => {
     }
 })
 
-router.get("/assignment/:roomId",protect,async(req:AuthRequest , res)=>{
-    const studentId=req.user?.id
-    const roomId=req.params.roomId;
-    const checkRoomMembership=await prisma.roomMembership.findFirst({
-        where:{
+router.get("/assignment/:roomId", protect, async (req: AuthRequest, res) => {
+    const studentId = req.user?.id
+    const roomId = req.params.roomId;
+    const checkRoomMembership = await prisma.roomMembership.findFirst({
+        where: {
             studentId,
             roomId
         }
     })
-    if(!checkRoomMembership){
-        return res.status(403).json({message:"you are not part of the room, join room first"})
+    if (!checkRoomMembership) {
+        return res.status(403).json({ message: "you are not part of the room, join room first" })
     }
-    const getAssignments=await prisma.assignment.findMany({
-        where:{
-            roomId:roomId
+    const getAssignments = await prisma.assignment.findMany({
+        where: {
+            roomId: roomId
         },
-        select:{
-        id:true,
-        title:true ,
-        pdfUrl:true
-    }});
-    return res.json({assignments:getAssignments})
+        select: {
+            id: true,
+            title: true,
+        }
+    });
+    return res.json({ assignments: getAssignments })
 
 })
 
-router.get("/assignment/:assignmentId",protect,async(req:AuthRequest,res)=>{
-    const roomId=req.body
-    const studentId=req.user?.id;
-    const assignmentId=req.params.assignmentId;
-    const checkRoomMembership=await prisma.roomMembership.findFirst({
-        where:{
+router.get("/room/:roomId/assignment/:assignmentId", protect, async (req: AuthRequest, res) => {
+    const roomId = req.params.roomId
+    const studentId = req.user?.id;
+    const assignmentId = req.params.assignmentId;
+    const checkRoomMembership = await prisma.roomMembership.findFirst({
+        where: {
             studentId,
             roomId
         }
     })
-    if(!checkRoomMembership){
-        return res.json({message:"not a part of room"})
+    if (!checkRoomMembership) {
+        return res.json({ message: "not a part of room" })
     }
-    const assignmentDetails=await prisma.assignment.findUnique({
-        where:{
-            id:assignmentId
+    const assignmentDetails = await prisma.assignment.findUnique({
+        where: {
+            id: assignmentId
         },
-        select:{
-            title:true,
-            roomId:true,
-            pdfUrl:true
+        select: {
+            title: true,
+            roomId: true,
+            pdfUrl: true
         }
     })
-    return res.json({assignmentDetails})
+    return res.json({ assignmentDetails })
 
 })
 
-
-router.get("/teacher/assignment/:roomId",protect,async(req:AuthRequest,res)=>{
-    const teacherId=req.user?.id;
-    const roomId=req.params.roomId;
-    const getAssignments=await prisma.assignment.findMany({
-        where:{
+router.get("/teacher/assignment/:roomId", protect, async (req: AuthRequest, res) => {
+    const teacherId = req.user?.id;
+    const roomId = req.params.roomId;
+    const getAssignments = await prisma.assignment.findMany({
+        where: {
             roomId
         },
-        select:{
-            title:true,
-            pdfUrl:true,
-            id:true
+        select: {
+            title: true,
+            pdfUrl: true,
+            id: true
         }
     })
-    return res.json({getAssignments})
+    return res.json({ getAssignments })
 })
 export default router;
