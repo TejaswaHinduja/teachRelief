@@ -14,7 +14,7 @@ export async function run(pdfUrl:string) {
       type: "document_url",
     },
   });
-  const extractedText=result.pages.map(page=>page.markdown).join("\n\n")
+  const extractedText=result.pages.map((page:{markdown:string})=>page.markdown).join("\n\n")
   return extractedText
 }
 
