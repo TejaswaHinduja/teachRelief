@@ -80,7 +80,7 @@ export default function SignPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-4 py-6">
         <div className="flex flex-col gap-2">
-        <div className="hidden-field" aria-hidden="true">
+        {/*<div className="hidden-field" aria-hidden="true">
         <label htmlFor="website">Website</label>
               <input
                 id="website"
@@ -89,7 +89,7 @@ export default function SignPage() {
                 tabIndex={-1}            // prevents keyboard focus
                 autoComplete="off"       
               />
-            </div>
+            </div> */}
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
