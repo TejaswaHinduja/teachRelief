@@ -110,7 +110,7 @@ export default function StudentSubmissions() {
                             <span className="font-medium">
                               {submission.assignment?.room?.name && submission.assignment.room.name !== "room name" 
                                 ? submission.assignment.room.name 
-                                : "Unknown Room"}
+                                : "Room Name"}
                             </span>
                             <span className="text-gray-400">•</span>
                             <span className="font-mono text-xs">{submission.assignment?.room?.code}</span>
