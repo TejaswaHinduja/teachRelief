@@ -150,8 +150,10 @@ export default function TeacherDashboard() {
                 key={room.id}
               >
                 <CardBody className="flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold">{room.name}</p>
+                  <div className="flex-1">
+                    <p className="font-semibold text-lg">
+                      {room.name && room.name !== "room name" ? room.name : `Room ${room.code.slice(-4)}`}
+                    </p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-sm text-gray-600 font-mono">{room.code}</span>
                       <CopyButton content={room.code} onCopy={() => console.log("copied")} />
