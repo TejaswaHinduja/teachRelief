@@ -65,12 +65,12 @@ export default function StudentDashboard() {
         <Button onClick={joinRoom} className="w-full" disabled={loading}>
           {loading ? "Joining Room ..." : "Join Room"}
         </Button>
-        <Button variant="outline" className="w-full">
+        <Button 
+          variant="outline" 
+          className="w-full"
+          onClick={() => router.push("/submissions")}
+        >
           View My Submissions
-        </Button>
-
-        <Button variant="outline" className="w-full">
-          View Grades
         </Button>
       </div>
     </div>

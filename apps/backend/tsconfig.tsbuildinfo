@@ -1,1 +1,0 @@
-{"root":["./src/index.ts","./src/middleware/jwt.ts","./src/middleware/protect.ts","./src/middleware/ratelimit.ts","./src/routes/assignment.ts","./src/routes/authroutes.ts","./src/routes/graderoute.ts","./src/routes/submission.ts","./src/services/gpt.ts","./src/services/mistral.ts","./src/utils/pdfValidator.ts"],"version":"5.9.3"}
