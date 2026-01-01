@@ -87,7 +87,7 @@ router.post("/createroom", protect, async (req: AuthRequest, res) => {
         const room = await prisma.room.create({
             data: {
                 code,
-                teacherId
+                teacherId,
             }
         })
         res.status(201).json({
@@ -98,6 +98,7 @@ router.post("/createroom", protect, async (req: AuthRequest, res) => {
     }
     catch (error) {
         console.log(error)
+        res.status(500).json({ message: "Error creating room" })
     }
 })
 /*router.get("/chats/:roomId",async(req , res) =>{
@@ -145,7 +146,6 @@ router.post("/joinroom", protect, async (req, res) => {
                 message: "Already joined",
                 roomId: checkRoom.id
              }
-                
             )
         }
         else {
