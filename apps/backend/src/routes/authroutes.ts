@@ -82,18 +82,21 @@ router.post("/createroom", protect, async (req: AuthRequest, res) => {
     try {
         //@ts-ignore
         const teacherId = req.user.id; // req.user.id is already a string
+	const roomname=req.body;
         const code = teacherId + Date.now().toString().slice(-4);
 
         const room = await prisma.room.create({
             data: {
                 code,
                 teacherId,
+		roomname:roomname
             }
         })
         res.status(201).json({
             roomId:room.id,
             message: "room created",
             code: room.code
+	    roomname:roomname
         })
     }
     catch (error) {
