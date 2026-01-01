@@ -18,28 +18,45 @@ export default function TeacherDashboard() {
   const [pdfUrl, setPdfUrl] = useState("");
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
+  const [roomName, setRoomName] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const router = useRouter()
 
   const createRoom = async () => {
+    if (!roomName.trim()) {
+      setError("Please enter a room name");
+      return;
+    }
     setLoading(true);
+    setError("");
     try {
       const response = await fetch(`${BACKEND_URL}/api/createroom`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: roomName.trim() }),
       });
       const data = await response.json();
 
       if (data.roomId) {
         setRoomId(data.roomId);
         setRoomCode(data.code);
+        setRoomName("");
+        setShowCreateForm(false);
+        // Refresh rooms list
+        const roomsResponse = await fetch(`${BACKEND_URL}/api/myrooms`, {
+          method: "GET",
+          credentials: "include"
+        });
+        const roomsData = await roomsResponse.json();
+        setRooms(roomsData.getRooms);
         alert(data.message || "Room created successfully!");
         router.push(`/room/${data.roomId}`);
         console.log("redirecting to the room")
       }
     } catch (e) {
       console.log(e);
-      alert("Failed to create room. Please try again.");
+      setError("Failed to create room. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -71,6 +88,59 @@ export default function TeacherDashboard() {
       <h2 className="text-2xl font-semibold">Teacher Dashboard</h2>
 
       <div className="space-y-4">
+        {/* Create Room Form */}
+        {showCreateForm ? (
+          <Card className="border-2 border-gray-200">
+            <CardBody className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="room-name">Room Name</Label>
+                <Input
+                  id="room-name"
+                  type="text"
+                  placeholder="e.g., Math 101 - Algebra"
+                  value={roomName}
+                  onChange={(e) => setRoomName(e.target.value)}
+                  disabled={loading}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !loading) {
+                      createRoom();
+                    }
+                  }}
+                />
+              </div>
+              {error && (
+                <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Button onClick={createRoom} disabled={loading} className="flex-1">
+                  {loading ? "Creating Room..." : "Create Room"}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setShowCreateForm(false);
+                    setRoomName("");
+                    setError("");
+                  }}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        ) : (
+          <Button 
+            onClick={() => setShowCreateForm(true)} 
+            className="w-full" 
+            disabled={loading}
+          >
+            Create New Room
+          </Button>
+        )}
+
         <div className="flex-wrap gap-4 w-300 space-y-4">
           {rooms?.map((room) => {
             return (
@@ -92,10 +162,6 @@ export default function TeacherDashboard() {
             );
           })}
         </div>
-
-        <Button onClick={createRoom} className="w-full" disabled={loading}>
-          {loading ? "Creating Room..." : "Create Room"}
-        </Button>
         
         {/* Room Code Display */}
         {roomCode && (<div className="flex">
