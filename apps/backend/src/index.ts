@@ -23,4 +23,4 @@ app.use("/api", assignmentRoutes)
 app.use("/api", submissionRoutes)
 
 
-app.listen(3000,"0.0.0.0")
+app.listen(1000,"0.0.0.0")

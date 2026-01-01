@@ -79,8 +79,14 @@ export default function TeacherDashboard() {
                 onPress={() => { router.push(`/room/${room.id}`) }}
                 key={room.id}
               >
-                <CardBody className="">
-                  {room.name} {room.code}
+                <CardBody className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold">{room.name}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-sm text-gray-600 font-mono">{room.code}</span>
+                      <CopyButton content={room.code} onCopy={() => console.log("copied")} />
+                    </div>
+                  </div>
                 </CardBody>
               </Card>
             );

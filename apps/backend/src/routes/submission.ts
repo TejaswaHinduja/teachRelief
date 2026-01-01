@@ -45,7 +45,20 @@ router.post("/view/submissions", protect, async (req: AuthRequest, res) => {
             id: assignmentId
         },
         select: {
-            submissions: true,
+            submissions: {
+                include: {
+                    student: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true
+                        }
+                    }
+                },
+                orderBy: {
+                    createdAt: "desc"
+                }
+            },
         }
     })
     if (!seeSubmissions) {
@@ -53,6 +66,44 @@ router.post("/view/submissions", protect, async (req: AuthRequest, res) => {
     }
     return res.json({ submissions: seeSubmissions[0]?.submissions || [] })
 
+})
+
+//for student to view their own submissions
+router.get("/my-submissions", protect, async (req: AuthRequest, res) => {
+    try {
+        //@ts-ignore
+        const studentId = req.user.id;
+        
+        const mySubmissions = await prisma.submission.findMany({
+            where: {
+                studentId: studentId
+            },
+            include: {
+                assignment: {
+                    select: {
+                        id: true,
+                        title: true,
+                        roomId: true,
+                        room: {
+                            select: {
+                                name: true,
+                                code: true
+                            }
+                        }
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: "desc"
+            }
+        })
+        
+        return res.json({ submissions: mySubmissions })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "Error fetching submissions" })
+    }
 })
 
 export default router;
