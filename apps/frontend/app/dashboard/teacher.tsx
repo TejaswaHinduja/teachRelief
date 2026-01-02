@@ -6,9 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
 import { useRouter } from "next/navigation";
 
-
-
-
 export default function TeacherDashboard() {
   const BACKEND_URL=process.env.NEXT_PUBLIC_BACKEND_URL
   const [rooms, setRooms] = useState<any[]>([]);
@@ -152,7 +149,8 @@ export default function TeacherDashboard() {
                 <CardBody className="flex items-center justify-between">
                   <div className="flex-1">
                     <p className="font-semibold text-lg">
-                      {room.name && room.name !== "room name" ? room.name : `Room ${room.code.slice(-4)}`}
+                      {roomName}
+                      {/*room.name && room.name !== "room name" ? room.name : `Room ${room.code.slice(-4)}`*/}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-sm text-gray-600 font-mono">{room.code}</span>

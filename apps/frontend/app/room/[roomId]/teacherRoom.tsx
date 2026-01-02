@@ -174,20 +174,30 @@ export default function Teacherroom() {
   };
 
   const createAssignment = async () => {
+    // Clear previous errors
+    setError("");
+    
+    // Validate all required fields
+    const errors: string[] = [];
+    
     if (!assignmentTitle.trim()) {
-      setError("Please enter an assignment title");
-      return;
+      errors.push("Please enter an assignment title");
     }
     if (!assignmentpdfUrl) {
-      setError("Please upload a PDF first");
-      return;
+      errors.push("Please upload the assignment PDF");
+    }
+    if (!solutionpdfUrl) {
+      errors.push("Please upload the solution PDF");
     }
     if (!ocrText) {
-      setError("Please run OCR first to extract solution text");
-      return;
+      errors.push("Please run OCR first to extract solution text from the solution PDF");
     }
     if (!roomId) {
-      setError("Room code not found");
+      errors.push("Room code not found");
+    }
+    
+    if (errors.length > 0) {
+      setError(errors.join(". "));
       return;
     }
 
@@ -274,24 +284,69 @@ export default function Teacherroom() {
           </div>
           {/* Assignment Title Input */}
           <div className="space-y-2 mb-4">
-            <Label htmlFor="assignment-title">Assignment Title</Label>
+            <Label htmlFor="assignment-title">
+              Assignment Title<span className="text-red-500 ml-1">*</span>
+            </Label>
             <Input
               id="assignment-title"
               type="text"
               placeholder="e.g., Chapter 1 - Algebra"
               value={assignmentTitle}
-              onChange={(e) => setAssignmentTitle(e.target.value)}
+              onChange={(e) => {
+                setAssignmentTitle(e.target.value);
+                if (error && error.includes("assignment title")) {
+                  setError("");
+                }
+              }}
               disabled={uploading || loading || creating}
+              className={!assignmentTitle.trim() && error && error.includes("assignment title") ? "border-red-500" : ""}
             />
+            {!assignmentTitle.trim() && (
+              <p className="text-sm text-gray-500">Please enter an assignment title</p>
+            )}
           </div>
 
           {/* PDF Upload Section */}
-          <div className="space-y-2">
-            <Label htmlFor="pdf-file">Upload Assignment </Label>
-            <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUploadAssignment}></Input>
-            <Label htmlFor="pdf-file">Upload Solution </Label>
-            <Input id="pdf-file" type="file" accept=".pdf" onChange={handleUpload} disabled={uploading || loading}
-            />
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="assignment-pdf">
+                Upload Assignment PDF<span className="text-red-500 ml-1">*</span>
+              </Label>
+              <Input 
+                id="assignment-pdf" 
+                type="file" 
+                accept=".pdf" 
+                onChange={handleUploadAssignment}
+                disabled={uploading || creating}
+                className={!assignmentpdfUrl && error && error.includes("assignment PDF") ? "border-red-500" : ""}
+              />
+              {assignmentpdfUrl && (
+                <p className="text-sm text-green-600">✓ Assignment PDF uploaded successfully</p>
+              )}
+              {!assignmentpdfUrl && (
+                <p className="text-sm text-gray-500">Please upload the assignment PDF file</p>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="solution-pdf">
+                Upload Solution PDF<span className="text-red-500 ml-1">*</span>
+              </Label>
+              <Input 
+                id="solution-pdf" 
+                type="file" 
+                accept=".pdf" 
+                onChange={handleUpload} 
+                disabled={uploading || loading || creating}
+                className={!solutionpdfUrl && error && error.includes("solution PDF") ? "border-red-500" : ""}
+              />
+              {solutionpdfUrl && (
+                <p className="text-sm text-green-600">✓ Solution PDF uploaded successfully</p>
+              )}
+              {!solutionpdfUrl && (
+                <p className="text-sm text-gray-500">Please upload the solution PDF file</p>
+              )}
+            </div>
           </div>
 
           {/* Action Buttons */}
@@ -315,12 +370,20 @@ export default function Teacherroom() {
           </div>
 
           {/* OCR Text Display */}
-          {ocrText && (
-            <div className="p-4 bg-gray-50 rounded-md mb-4">
-              <h3 className="font-semibold mb-2">Extracted Solution Text:</h3>
-              <p className="text-sm text-gray-800 whitespace-pre-wrap">{ocrText}</p>
-            </div>
-          )}
+          <div className="space-y-2 mb-4">
+            {ocrText ? (
+              <div className="p-4 bg-gray-50 rounded-md">
+                <h3 className="font-semibold mb-2">Extracted Solution Text:</h3>
+                <p className="text-sm text-gray-800 whitespace-pre-wrap">{ocrText}</p>
+              </div>
+            ) : solutionpdfUrl && (
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p className="text-sm text-yellow-700">
+                  Solution PDF uploaded. Please click "Run OCR on PDF" to extract the solution text.
+                </p>
+              </div>
+            )}
+          </div>
 
           {/* Error Display */}
           {error && (

@@ -19,11 +19,13 @@ export default function SignPage() {
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
+    mode: "onBlur", // Validate on blur for better UX
   });
 
   const signupForm = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: { name: "", email: "", password: "", role: "STUDENT" },
+    mode: "onChange", // Real-time validation for signup
   });
 
   // Validation checks after hooks
@@ -39,7 +41,10 @@ export default function SignPage() {
 
   // Use the appropriate form based on type
   const form = signup ? signupForm : loginForm;
-  const { register, handleSubmit, control, formState: { errors } } = form;
+  const { register, handleSubmit, control, formState: { errors }, watch } = form;
+  
+  // Watch password for strength indicator (only for signup)
+  const password = signup ? signupForm.watch("password") : "";
 
   async function onSubmit(values: SignupFormData | LoginFormData) {
     const endpoint = signup ? "signup" : "login";
@@ -90,7 +95,7 @@ export default function SignPage() {
                 autoComplete="off"       
               />
             </div> */}
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Email<span className="text-red-500">*</span></Label>
           <Input
             id="email"
             type="email"
@@ -104,14 +109,32 @@ export default function SignPage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Password{signup && <span className="text-red-500">*</span>}</Label>
           <Input
             id="password"
             type="password"
-            placeholder="Enter password"
+            placeholder={signup ? "Enter password (min 6 chars, 1 uppercase, 1 lowercase, 1 number)" : "Enter password"}
             {...(signup ? signupForm.register("password") : loginForm.register("password"))}
             className={errors.password ? "border-red-500" : ""}
           />
+          {signup && password && (
+            <div className="space-y-1">
+              <div className="flex gap-2 text-xs">
+                <span className={password.length >= 6 ? "text-green-600" : "text-gray-400"}>
+                  {password.length >= 6 ? "✓" : "○"} At least 6 characters
+                </span>
+                <span className={/[A-Z]/.test(password) ? "text-green-600" : "text-gray-400"}>
+                  {/[A-Z]/.test(password) ? "✓" : "○"} Uppercase
+                </span>
+                <span className={/[a-z]/.test(password) ? "text-green-600" : "text-gray-400"}>
+                  {/[a-z]/.test(password) ? "✓" : "○"} Lowercase
+                </span>
+                <span className={/[0-9]/.test(password) ? "text-green-600" : "text-gray-400"}>
+                  {/[0-9]/.test(password) ? "✓" : "○"} Number
+                </span>
+              </div>
+            </div>
+          )}
           {errors.password && (
             <p className="text-sm text-red-500">{errors.password.message}</p>
           )}
@@ -119,7 +142,22 @@ export default function SignPage() {
 
         {signup && (
           <div className="flex flex-col gap-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="name">Name<span className="text-red-500 ">*</span></Label>
+            <Input
+              id="name"
+              placeholder="Enter your name (letters and spaces only)"
+              {...signupForm.register("name")}
+              className={signupForm.formState.errors.name ? "border-red-500" : ""}
+            />
+            {signupForm.formState.errors.name && (
+              <p className="text-sm text-red-500">{signupForm.formState.errors.name.message}</p>
+            )}
+          </div>
+        )}
+
+        {signup && (
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="role">Role<span className="text-red-500">*</span></Label>
             <Controller
               name="role"
               control={signupForm.control}
@@ -140,21 +178,6 @@ export default function SignPage() {
                 </>
               )}
             />
-          </div>
-        )}
-
-        {signup && (
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="Enter your name"
-              {...signupForm.register("name")}
-              className={signupForm.formState.errors.name ? "border-red-500" : ""}
-            />
-            {signupForm.formState.errors.name && (
-              <p className="text-sm text-red-500">{signupForm.formState.errors.name.message}</p>
-            )}
           </div>
         )}
 
