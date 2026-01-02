@@ -65,10 +65,10 @@ export default function Home() {
 
           {/* Auth Buttons */}
           <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => router.push("/auth/login")}>
+            <Button className="cursor-pointer" variant="outline" onClick={() => router.push("/auth/login")}>
               Log In
             </Button>
-            <Button onClick={() => router.push("/auth/signup")}>
+            <Button className="cursor-pointer"onClick={() => router.push("/auth/signup")}>
               Sign Up
             </Button>
           </div>
@@ -81,7 +81,7 @@ export default function Home() {
           <h1 className="text-3xl md:text-6xl font-bold mb-6">Automate Grading with AI Precision</h1>
         </Highlighter>
         <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mt-6 mb-8 max-w-3xl text-center px-6">Upload your solution key, let us grade your students' work instantly.</p>
-        <Button size="lg" onClick={() => router.push("/auth/signup")} className="text-lg px-8 py-6">
+        <Button size="lg" onClick={() => router.push("/auth/signup")} className="cusror-pointer text-lg px-8 py-6">
           Get Started
         </Button>
       </div>

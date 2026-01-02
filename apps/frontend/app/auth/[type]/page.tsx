@@ -158,7 +158,7 @@ export default function SignPage() {
           </div>
         )}
 
-        <Button className="w-full mt-2">{signup ? "Sign Up" : "Sign In"}</Button>
+        <Button className="w-full mt-2 cursor-pointer">{signup ? "Sign Up" : "Sign In"}</Button>
       </form>
 
 
