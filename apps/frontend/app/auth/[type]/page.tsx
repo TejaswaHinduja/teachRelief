@@ -113,7 +113,7 @@ export default function SignPage() {
           <Input
             id="password"
             type="password"
-            placeholder={signup ? "Enter password (min 6 chars, 1 uppercase, 1 lowercase, 1 number)" : "Enter password"}
+            placeholder={signup ? "Enter password (6 chars, 1 uppercase, 1 lowercase,1 no)" : "Enter password"}
             {...(signup ? signupForm.register("password") : loginForm.register("password"))}
             className={errors.password ? "border-red-500" : ""}
           />
@@ -145,7 +145,7 @@ export default function SignPage() {
             <Label htmlFor="name">Name<span className="text-red-500 ">*</span></Label>
             <Input
               id="name"
-              placeholder="Enter your name (letters and spaces only)"
+              placeholder="Enter your name (letters only)"
               {...signupForm.register("name")}
               className={signupForm.formState.errors.name ? "border-red-500" : ""}
             />
