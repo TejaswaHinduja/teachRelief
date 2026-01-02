@@ -89,7 +89,7 @@ router.post("/createroom", protect, async (req: AuthRequest, res) => {
             data: {
                 code,
                 teacherId,
-                name: name || "room name"
+                name: (name && name.trim() !== "") ? name.trim() : "room name"
             }
         })
         res.status(201).json({
