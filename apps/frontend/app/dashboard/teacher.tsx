@@ -49,7 +49,6 @@ export default function TeacherDashboard() {
         setRoomCode(data.code);
         setRoomName("");
         setShowCreateForm(false);
-      
         router.push(`/room/${data.roomId}`);
       }
     } catch (e) {
