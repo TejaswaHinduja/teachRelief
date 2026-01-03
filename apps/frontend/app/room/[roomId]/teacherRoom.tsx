@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload, } from "@imagekit/next";
 import { Card, CardBody } from "@heroui/card";
+import { Loader2, CheckCircle, Upload } from "lucide-react";
 
 export default function Teacherroom() {
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
@@ -312,18 +313,29 @@ export default function Teacherroom() {
               <Label htmlFor="assignment-pdf">
                 Upload Assignment PDF<span className="text-red-500 ml-1">*</span>
               </Label>
-              <Input 
-                id="assignment-pdf" 
-                type="file" 
-                accept=".pdf" 
-                onChange={handleUploadAssignment}
-                disabled={uploading || creating}
-                className={!assignmentpdfUrl && error && error.includes("assignment PDF") ? "border-red-500" : ""}
-              />
-              {assignmentpdfUrl && (
-                <p className="text-sm text-green-600">✓ Assignment PDF uploaded successfully</p>
+              <div className="flex items-center gap-3">
+                <Input 
+                  id="assignment-pdf" 
+                  type="file" 
+                  accept=".pdf" 
+                  onChange={handleUploadAssignment}
+                  disabled={uploading || creating}
+                  className={!assignmentpdfUrl && error && error.includes("assignment PDF") ? "border-red-500" : "flex-1"}
+                />
+                {uploading && (
+                  <div className="flex items-center gap-2 text-sm text-blue-600">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Uploading...</span>
+                  </div>
+                )}
+              </div>
+              {assignmentpdfUrl && !uploading && (
+                <div className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <p className="text-sm text-green-700">Assignment PDF uploaded successfully</p>
+                </div>
               )}
-              {!assignmentpdfUrl && (
+              {!assignmentpdfUrl && !uploading && (
                 <p className="text-sm text-gray-500">Please upload the assignment PDF file</p>
               )}
             </div>
@@ -332,18 +344,29 @@ export default function Teacherroom() {
               <Label htmlFor="solution-pdf">
                 Upload Solution PDF<span className="text-red-500 ml-1">*</span>
               </Label>
-              <Input 
-                id="solution-pdf" 
-                type="file" 
-                accept=".pdf" 
-                onChange={handleUpload} 
-                disabled={uploading || loading || creating}
-                className={!solutionpdfUrl && error && error.includes("solution PDF") ? "border-red-500" : ""}
-              />
-              {solutionpdfUrl && (
-                <p className="text-sm text-green-600">✓ Solution PDF uploaded successfully</p>
+              <div className="flex items-center gap-3">
+                <Input 
+                  id="solution-pdf" 
+                  type="file" 
+                  accept=".pdf" 
+                  onChange={handleUpload} 
+                  disabled={uploading || loading || creating}
+                  className={!solutionpdfUrl && error && error.includes("solution PDF") ? "border-red-500" : "flex-1"}
+                />
+                {uploading && (
+                  <div className="flex items-center gap-2 text-sm text-blue-600">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Uploading...</span>
+                  </div>
+                )}
+              </div>
+              {solutionpdfUrl && !uploading && (
+                <div className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <p className="text-sm text-green-700">Solution PDF uploaded successfully</p>
+                </div>
               )}
-              {!solutionpdfUrl && (
+              {!solutionpdfUrl && !uploading && (
                 <p className="text-sm text-gray-500">Please upload the solution PDF file</p>
               )}
             </div>
@@ -352,20 +375,34 @@ export default function Teacherroom() {
           {/* Action Buttons */}
           <div className="flex space-y-2 space-x-1 gap-3 mt-6 mb-4">
             <Button
-              className="cursor-pointer"
+              className="cursor-pointer flex items-center gap-2"
               onClick={handleOCR}
               disabled={loading || uploading || !assignmentpdfUrl || creating}
               variant="outline"
             >
-              {loading ? "Extracting OCR..." : "Run OCR on PDF"}
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Extracting OCR...
+                </>
+              ) : (
+                "Run OCR on PDF"
+              )}
             </Button>
 
             <Button
-              className="cursor-pointer"
+              className="cursor-pointer flex items-center gap-2"
               onClick={createAssignment}
               disabled={creating || !assignmentTitle || !assignmentpdfUrl || !ocrText}
             >
-              {creating ? "Creating..." : "Create Assignment"}
+              {creating ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create Assignment"
+              )}
             </Button>
           </div>
 
@@ -406,13 +443,18 @@ export default function Teacherroom() {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Your Assignments</h2>
 
-            {loading && <p>Loading assignments...</p>}
+            {loading && (
+              <div className="text-center py-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+                <p className="text-gray-500">Loading assignments...</p>
+              </div>
+            )}
 
             {!loading && assignments.length === 0 && (
               <p className="text-gray-500">No assignments yet. Create one above!</p>
             )}
 
-            {assignments.map((assignment) => (
+            {!loading && assignments.map((assignment) => (
               <Card isPressable onPress={() => { router.push(`/room/${roomId}/assignment/${assignment.id}/submissions`) }} key={assignment.id} className="border-2 border-gray-200">
                 <CardBody>
                   <h3 className="font-semibold">{assignment.title}</h3>

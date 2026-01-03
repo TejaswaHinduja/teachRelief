@@ -12,10 +12,12 @@ const app=express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin:["https://teachrelief.tejaswahinduja.me" ,
-    "http://localhost:3000"
-],
-    credentials:true
+    origin: ["https://teachrelief.tejaswahinduja.me", "http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    exposedHeaders: ["Set-Cookie"],
+    optionsSuccessStatus: 200
 }))
 app.use("/api", router)
 app.use("/api", graderoutes)
