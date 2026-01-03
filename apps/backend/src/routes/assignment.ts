@@ -94,7 +94,8 @@ router.get("/teacher/assignment/:roomId", protect, async (req: AuthRequest, res)
         select: {
             title: true,
             pdfUrl: true,
-            id: true
+            id: true,
+	    createdAt:true
         }
     })
     return res.json({ getAssignments })
