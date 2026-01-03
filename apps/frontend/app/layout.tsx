@@ -15,13 +15,38 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "TeachRelief",
   description: "Helping teachers save their time by automating the grading process",
+
+  openGraph: {
+    title: "TeachRelief",
+    description:
+      "Helping teachers save their time by automating the grading process",
+    url: "https://teachrelief.tejaswahinduja.me", 
+    siteName: "TeachRelief",
+    images: [
+      {
+        url: "/og.png", 
+        width: 1200,
+        height: 630,
+        alt: "TeachRelief – AI-powered grading assistant",
+      },
+    ],
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "TeachRelief",
+    description:
+      "Helping teachers save their time by automating the grading process",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
