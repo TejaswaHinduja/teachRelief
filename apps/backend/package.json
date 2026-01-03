@@ -34,6 +34,7 @@
     "openai": "^6.9.1",
     "pdf-parse": "^2.4.5",
     "pdf2pic": "^3.2.0",
+    "pm2": "^6.0.14",
     "scribe.js-ocr": "^0.9.0",
     "tesseract.js": "^6.0.1"
   },

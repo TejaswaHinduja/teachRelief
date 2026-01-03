@@ -8,7 +8,7 @@ import submissionRoutes from "./routes/submission";
 
 
 const app=express();
-
+app.set("trust proxy", true);
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
@@ -23,4 +23,4 @@ app.use("/api", assignmentRoutes)
 app.use("/api", submissionRoutes)
 
 
-app.listen(1000,"0.0.0.0")
+app.listen(3000,"0.0.0.0")
