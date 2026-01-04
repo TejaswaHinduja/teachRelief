@@ -154,7 +154,9 @@ export default function TeacherDashboard() {
                     </p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-sm text-gray-600 font-mono">{room.code}</span>
-                      <CopyButton content={room.code} onCopy={() => console.log("copied")} />
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <CopyButton content={room.code} onCopy={() => console.log("copied")} />
+                      </div>
                     </div>
                   </div>
                 </CardBody>
@@ -174,7 +176,9 @@ export default function TeacherDashboard() {
             <CardBody>
               <div className="flex space-x-2">
                 <p>{roomCode}</p>
-                <CopyButton content={roomCode} onCopy={() => console.log("copied")} />
+                <div onClick={(e) => e.stopPropagation()}>
+                  <CopyButton content={roomCode} onCopy={() => console.log("copied")} />
+                </div>
               </div>
             </CardBody>
           </Card>
