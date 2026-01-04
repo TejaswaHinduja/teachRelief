@@ -8,12 +8,55 @@ import { cn } from "@/lib/utils";
 import { Highlighter } from "@/components/ui/highlighter"
 import Hat from "@/icons/Hat"
 import { TwitterIcon } from "@/components/ui/twitter";
-
+import { useEffect, useState } from "react";
 import { CometCard } from "@/components/ui/comet-card";
 import { LinkedInIcon } from "@/components/ui/linkedin";
 
 export default function Home() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/verify-auth", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.authenticated) {
+          // Store user data in localStorage for the dashboard
+          if (data.user) {
+            localStorage.setItem("userRole", data.user.role);
+            localStorage.setItem("userName", data.user.name || "");
+          }
+          // Redirect to dashboard
+          router.push("/dashboard");
+        } else {
+          // User is not authenticated, show landing page
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error checking authentication:", error);
+        // If there's an error, show the landing page
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
 

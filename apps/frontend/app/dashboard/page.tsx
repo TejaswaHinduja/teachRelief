@@ -14,16 +14,50 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const role = localStorage.getItem("userRole");
-    const name = localStorage.getItem("userName");
-
-    if (!role) {
-      router.push("/auth/login");
-      return;
+    // First check localStorage for immediate display
+    const cachedRole = localStorage.getItem("userRole");
+    const cachedName = localStorage.getItem("userName");
+    
+    if (cachedRole) {
+      setUserRole(cachedRole);
+      setUserName(cachedName || "User");
     }
 
-    setUserRole(role);
-    setUserName(name || "User");
+    // Then verify with the backend
+    const verifyAuth = async () => {
+      try {
+        const response = await fetch("/api/verify-auth", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.authenticated) {
+          // User is not authenticated, clear localStorage and redirect
+          localStorage.removeItem("userRole");
+          localStorage.removeItem("userName");
+          router.push("/auth/login");
+          return;
+        }
+
+        // Update with fresh data from backend
+        if (data.user) {
+          localStorage.setItem("userRole", data.user.role);
+          localStorage.setItem("userName", data.user.name || "");
+          setUserRole(data.user.role);
+          setUserName(data.user.name || "User");
+        }
+      } catch (error) {
+        console.error("Error verifying authentication:", error);
+        // On error, redirect to login
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userName");
+        router.push("/auth/login");
+      }
+    };
+
+    verifyAuth();
   }, [router]);
 
 
@@ -36,10 +70,21 @@ export default function DashboardPage() {
         </h1>
         <Button
           variant="outline"
-          onClick={() => {
-            localStorage.removeItem("userRole");
-            localStorage.removeItem("userName");
-            router.push("/auth/login");
+          onClick={async () => {
+            try {
+              const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+              await fetch(`${BACKEND_URL}/api/logout`, {
+                method: "POST",
+                credentials: "include",
+              });
+            } catch (error) {
+              console.error("Error during logout:", error);
+            } finally {
+              // Clear localStorage and redirect regardless of API success
+              localStorage.removeItem("userRole");
+              localStorage.removeItem("userName");
+              router.push("/auth/login");
+            }
           }}
         >
           Logout

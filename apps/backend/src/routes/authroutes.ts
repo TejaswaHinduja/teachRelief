@@ -211,4 +211,51 @@ router.get("/myrooms",protect, async (req:AuthRequest,res) =>{
 
 })
 
+router.get("/verify", protect, async (req: AuthRequest, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ 
+                authenticated: false,
+                message: "Not authenticated" 
+            });
+        }
+
+        return res.status(200).json({
+            authenticated: true,
+            user: {
+                id: req.user.id,
+                name: req.user.name,
+                email: req.user.email,
+                role: req.user.role
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ 
+            authenticated: false,
+            message: "Error verifying authentication" 
+        });
+    }
+});
+
+router.post("/logout", (req, res) => {
+    try {
+        res.cookie("jwt", "", {
+            httpOnly: true,
+            expires: new Date(0),
+            sameSite: "none",
+            secure: process.env.NODE_ENV !== "development"
+        });
+        
+        return res.status(200).json({ 
+            message: "Logged out successfully" 
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ 
+            message: "Error during logout" 
+        });
+    }
+});
+
 export default router;
