@@ -17,6 +17,7 @@
     "@mistralai/mistralai": "^1.11.0",
     "@repo/db": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@solana/web3.js": "^1.98.4",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
@@ -24,6 +25,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "bcrypt": "^6.0.0",
+    "bs58": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -35,7 +37,10 @@
     "pdf-parse": "^2.4.5",
     "pdf2pic": "^3.2.0",
     "scribe.js-ocr": "^0.9.0",
-    "tesseract.js": "^6.0.1"
+    "tesseract.js": "^6.0.1",
+    "viem": "^2.44.4",
+    "x402-express": "^1.1.0",
+    "x402-open": "^1.2.9"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

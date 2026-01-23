@@ -82,21 +82,21 @@ router.post("/createroom", protect, async (req: AuthRequest, res) => {
     try {
         //@ts-ignore
         const teacherId = req.user.id; // req.user.id is already a string
-        const { name } = req.body;
+	const { name }=req.body;
         const code = teacherId + Date.now().toString().slice(-4);
 
         const room = await prisma.room.create({
             data: {
                 code,
                 teacherId,
-                name: (name && name.trim() !== "") ? name.trim() : "room name"
+		name: (name && name.trim() !== "") ? name.trim() : "room name"
             }
         })
         res.status(201).json({
             roomId:room.id,
             message: "room created",
             code: room.code,
-            name:room.name
+	    name:room.name
         })
     }
     catch (error) {
@@ -210,7 +210,6 @@ router.get("/myrooms",protect, async (req:AuthRequest,res) =>{
     return res.json({getRooms})
 
 })
-
 router.get("/verify", protect, async (req: AuthRequest, res) => {
     try {
         if (!req.user) {
@@ -257,5 +256,4 @@ router.post("/logout", (req, res) => {
         });
     }
 });
-
 export default router;

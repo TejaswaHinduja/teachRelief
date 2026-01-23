@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import WalletProvider from "@/components/WalletProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,13 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://teachrelief.tejaswahinduja.me"),
   title: "TeachRelief",
   description: "Helping teachers save their time by automating the grading process",
 
   openGraph: {
     title: "TeachRelief",
-    description: "Helping teachers save their time by automating the grading process",
+    description:
+      "Helping teachers save their time by automating the grading process",
     url: "https://teachrelief.tejaswahinduja.me",
     siteName: "TeachRelief",
     images: [
@@ -36,10 +37,12 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "TeachRelief",
-    description: "Helping teachers save their time by automating the grading process",
-    images: ["/og.png"],  
+    description:
+      "Helping teachers save their time by automating the grading process",
+    images: ["/og.png"],
   },
 };
+
 export default function RootLayout({
   children,
 }: {
@@ -50,8 +53,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <WalletProvider>{children}</WalletProvider>
       </body>
     </html>
   );
 }
+
