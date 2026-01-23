@@ -37,5 +37,9 @@ yarn-error.log*
 .DS_Store
 *.pem
 
-# Docs (personal learning notes)
+# Docs (personal learning notes/integration guides)
 docs/
+X402_STATUS.md
+README_X402.md
+apps/backend/SETUP_X402.md
+apps/backend/X402_OPEN_INTEGRATION.md
