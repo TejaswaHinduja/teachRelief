@@ -15,7 +15,7 @@ export default function SignPage() {
   const router = useRouter();
 
   // Create separate form hooks for better type safety
-  // Hooks must be called at the top level, before any conditional returns
+  
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
@@ -36,10 +36,9 @@ export default function SignPage() {
   
   const signup = typeof type === "string" && type === "signup";
 
-  // Use the appropriate schema based on the form type
+  
   const schema = signup ? signupSchema : loginSchema;
 
-  // Use the appropriate form based on type
   const form = signup ? signupForm : loginForm;
   const { register, handleSubmit, control, formState: { errors }, watch } = form;
   
