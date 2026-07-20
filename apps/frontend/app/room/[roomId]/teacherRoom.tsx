@@ -20,7 +20,7 @@ export default function Teacherroom() {
   const [assignmentTitle, setAssignmentTitle] = useState("");
   const [creating, setCreating] = useState(false);
   const [success, setSuccess] = useState("");
-  const [submissions, setSubmissions] = useState<any[]>([])
+  const [uploadProgress, setUploadProgress] = useState(0)
   const [assignments, setAssignments] = useState<any[]>([])
 
   const params = useParams();
@@ -115,6 +115,7 @@ export default function Teacherroom() {
         fileName: file.name,
         onProgress: (event) => {
           const percent = (event.loaded / event.total) * 100;
+          setUploadProgress(percent);
           console.log(`Upload progress: ${percent.toFixed(2)}%`);
         },
       });
@@ -175,12 +176,13 @@ export default function Teacherroom() {
   };
 
   const createAssignment = async () => {
-    // Clear previous errors
-    setError("");
     
+    setError("");
     // Validate all required fields
     const errors: string[] = [];
-    
+    if (!roomId) {
+      errors.push("Room code not found");
+    }
     if (!assignmentTitle.trim()) {
       errors.push("Please enter an assignment title");
     }
@@ -193,9 +195,7 @@ export default function Teacherroom() {
     if (!ocrText) {
       errors.push("Please run OCR first to extract solution text from the solution PDF");
     }
-    if (!roomId) {
-      errors.push("Room code not found");
-    }
+    
     
     if (errors.length > 0) {
       setError(errors.join(". "));
@@ -236,7 +236,7 @@ export default function Teacherroom() {
       const data = await response.json();
       setSuccess(`Assignment "${assignmentTitle}" created successfully!`);
 
-      // Reset form
+      
       setAssignmentTitle("");
       setPdfUrl("");
       setOcrText("");
@@ -325,7 +325,7 @@ export default function Teacherroom() {
                 {uploading && (
                   <div className="flex items-center gap-2 text-sm text-blue-600">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Uploading...</span>
+                    <span>{uploadProgress.toFixed(0)}%</span>
                   </div>
                 )}
               </div>
